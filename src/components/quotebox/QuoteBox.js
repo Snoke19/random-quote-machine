@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import fetchRandomQuote from "./QuoteService";
+import fetchRandomQuote from "./services/QuoteService";
 import QuoteAuthor from "./quote-author/QuoteAuthor";
 import "./QuoteBox.css";
 
@@ -14,12 +14,11 @@ export default function QuoteBox() {
     const [colorBackGround, setColorBackGround] = useState(colors[0]);
     const [fade, setFade] = useState(false);
 
-    const loadQuote = async () => {
+    const loadQuote = useCallback(async () => {
         setFade(true);
 
         setTimeout(async () => {
-            setColorBackGround(getRandomColorArray());
-
+            setColorBackGround(getRandomColor());
             try {
                 const quote = await fetchRandomQuote();
                 setQuoteObj(quote);
@@ -30,18 +29,19 @@ export default function QuoteBox() {
                 setFade(false);
             }
         }, 500);
-    };
+    }, []);
 
-    const getRandomColorArray = () => colors[Math.floor(Math.random() * colors.length)];
+    const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
     useEffect(() => {
         document.body.style.backgroundColor = colorBackGround;
-        document.body.style.transition = 'background-color 0.9s ease';
+        document.body.style.transition = 'background-color 1s ease';
     }, [colorBackGround]);
 
     useEffect(() => {
+        console.log("run useeffect loadQuote");
         loadQuote();
-    }, []);
+    }, [loadQuote]);
 
     const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteObj.quote)}%22%20${encodeURIComponent(quoteObj.author)}`;
 
