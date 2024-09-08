@@ -3,53 +3,80 @@ import { useSpring, animated } from "@react-spring/web";
 import fetchRandomQuote from "./QuoteService";
 import "./QuoteBox.css";
 
+const colors = [
+    '#16a085',
+    '#27ae60',
+    '#2c3e50',
+    '#f39c12',
+    '#e74c3c',
+    '#9b59b6',
+    '#FB6964',
+    '#342224',
+    '#472E32',
+    '#BDBB99',
+    '#77B1A9',
+    '#73A857'
+];
+
 export default function QuoteBox() {
 
     const [quoteObj, setQuoteObj] = useState({});
+    const [colorBackGround, setColorBackGround] = useState(colors[0]);
+    const [fade, setFade] = useState(false);
 
     const loadQuote = async () => {
-        try {
-            const quote = await fetchRandomQuote();
-            setQuoteObj(quote);
-        } catch (error) {
-            console.error('Failed to load quote:', error);
-        }
+        setFade(true);
+
+        setTimeout(async () => {
+            setColorBackGround(getRandomColorArray());
+
+            try {
+                const quote = await fetchRandomQuote();
+                setQuoteObj(quote);
+            } catch (error) {
+                console.error('Failed to load quote:', error);
+            }
+
+            setFade(false);
+        }, 500);
     };
+
+    function getRandomColorArray() {
+        const index = Math.floor(Math.random() * colors.length);
+        return colors[index];
+    }
+
+    useEffect(() => {
+        document.body.style.backgroundColor = colorBackGround;
+        document.body.style.transition = 'background-color 0.9s ease';
+    }, [colorBackGround]);
 
     useEffect(() => {
         loadQuote();
     }, []);
 
+    const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteObj.quote)}%22%20${encodeURIComponent(quoteObj.author)}`;
+
     return (
-        <>
-            <div id="quote-box">
-                <div class="quote-text" style={{ opacity: 1 }}>
-                    <i class="fa fa-quote-left"> </i><span id="text">{quoteObj.quote}</span>
-                </div>
-                <div class="quote-author" style={{ opacity: 1 }}>- <span id="author">Plato</span></div>
-                <div class="buttons">
-                    <a
-                        class="button"
-                        id="tweet-quote"
-                        title="Tweet this quote!"
-                        target="_top"
-                        href="https://twitter.com/intent/tweet?hashtags=quotes&amp;related=freecodecamp&amp;text=%22We%20can%20easily%20forgive%20a%20child%20who%20is%20afraid%20of%20the%20dark%3B%20the%20real%20tragedy%20of%20life%20is%20when%20men%20are%20afraid%20of%20the%20light.%22%20Plato"
-                        style={{ backgroundColor: 'rgb(231, 76, 60)' }}>
-                        <i class="fa fa-twitter"></i>
-                    </a>
-                    <a
-                        class="button"
-                        id="tumblr-quote"
-                        title="Post this quote on tumblr!"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://www.tumblr.com/widgets/share/tool?posttype=quote&amp;tags=quotes,freecodecamp&amp;caption=Plato&amp;content=We%20can%20easily%20forgive%20a%20child%20who%20is%20afraid%20of%20the%20dark%3B%20the%20real%20tragedy%20of%20life%20is%20when%20men%20are%20afraid%20of%20the%20light.&amp;canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&amp;shareSource=tumblr_share_button"
-                        style={{ backgroundColor: 'rgb(231, 76, 60)' }}>
-                        <i class="fa fa-tumblr"></i>
-                    </a>
-                    <button class="button" id="new-quote" style={{ backgroundColor: 'rgb(231, 76, 60)' }} onClick={loadQuote}>New quote</button>
-                </div>
+        <div id="quote-box">
+            <div className={`quote-text ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
+                <i className="fa fa-quote-left"> </i><span id="text">{quoteObj.quote}</span>
             </div>
-        </>
+            <div className={`quote-author ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
+                - <span id="author">{quoteObj.author}</span>
+            </div>
+            <div className="buttons">
+                <a
+                    className="button"
+                    id="tweet-quote"
+                    title="Tweet this quote!"
+                    target="_top"
+                    href={tweetQuoteUrl}
+                    style={{ backgroundColor: colorBackGround }}>
+                    <i className="fa fa-twitter"></i>
+                </a>
+                <button className="button" id="new-quote" style={{ backgroundColor: colorBackGround }} onClick={loadQuote}>New quote</button>
+            </div>
+        </div>
     );
 }
