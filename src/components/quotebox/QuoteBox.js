@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useSpring, animated } from "@react-spring/web";
+import React, { useState, useEffect, useCallback } from "react";
 import fetchRandomQuote from "./QuoteService";
+import QuoteAuthor from "./quote-author/QuoteAuthor";
 import "./QuoteBox.css";
 
 const colors = [
-    '#16a085',
-    '#27ae60',
-    '#2c3e50',
-    '#f39c12',
-    '#e74c3c',
-    '#9b59b6',
-    '#FB6964',
-    '#342224',
-    '#472E32',
-    '#BDBB99',
-    '#77B1A9',
-    '#73A857'
+    '#b5d6ff', '#e08e47', '#141a35', '#ff7d00', '#1d1832', '#ff0f39',
+    '#ff9508', '#700000', '#002876', '#ff0f39', '#f6a6b8', '#03210a'
 ];
 
 export default function QuoteBox() {
 
-    const [quoteObj, setQuoteObj] = useState({});
+    const [quoteObj, setQuoteObj] = useState({ quote: '', author: '' });
     const [colorBackGround, setColorBackGround] = useState(colors[0]);
     const [fade, setFade] = useState(false);
 
@@ -35,16 +25,14 @@ export default function QuoteBox() {
                 setQuoteObj(quote);
             } catch (error) {
                 console.error('Failed to load quote:', error);
+                setQuoteObj({ quote: 'Error loading quote', author: '' });
+            } finally {
+                setFade(false);
             }
-
-            setFade(false);
         }, 500);
     };
 
-    function getRandomColorArray() {
-        const index = Math.floor(Math.random() * colors.length);
-        return colors[index];
-    }
+    const getRandomColorArray = () => colors[Math.floor(Math.random() * colors.length)];
 
     useEffect(() => {
         document.body.style.backgroundColor = colorBackGround;
@@ -59,12 +47,7 @@ export default function QuoteBox() {
 
     return (
         <div id="quote-box">
-            <div className={`quote-text ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
-                <i className="fa fa-quote-left"> </i><span id="text">{quoteObj.quote}</span>
-            </div>
-            <div className={`quote-author ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
-                - <span id="author">{quoteObj.author}</span>
-            </div>
+            <QuoteAuthor quoteObj={quoteObj} colorBackGround={colorBackGround} fade={fade} />
             <div className="buttons">
                 <a
                     className="button"

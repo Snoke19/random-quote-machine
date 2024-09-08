@@ -4,6 +4,6 @@ import './Footer.css';
 export default function Footer() {
 
     return (
-        <div className="footer">by <a href="https://codepen.io/hezag/">hezag</a></div>
+        <div className="footer">by <a href="https://github.com/Snoke19" style={{ textDecoration: 'underline' }}>snoke19</a></div>
     )
 }
