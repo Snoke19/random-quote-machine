@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import WrapperComponent from './components/WrapperComponent';
+import QuoteBox from "./components/quotebox/QuoteBox";
+import Footer from "./components/footer/Footer";
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <WrapperComponent />
+    <div className="wrapper">
+      <QuoteBox />
+      <Footer />
+    </div>
   </React.StrictMode>
 );
 
