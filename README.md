@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# Random Quote Machine
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). \
+This is a project with a random quote generator. It is created by ReactJS. This is a simple project for studying and exploring the ReactJS framework.
 
 ## Preview
 
