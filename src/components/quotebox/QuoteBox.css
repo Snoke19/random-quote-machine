@@ -1,13 +1,16 @@
 #quote-box {
-    border-radius: 3px;
+    padding: 50px 60px;
+    border-radius: 10px;
     position: relative;
     width: 450px;
-    padding: 40px 50px;
     display: table;
     background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 #quote-box .quote-text {
+    padding: 10px 0;
+    font-family: "Merriweather", serif;
     text-align: center;
     width: 450px;
     height: auto;
@@ -22,10 +25,11 @@
 }
 
 #quote-box .quote-author {
+    font-family: "Lora", serif;
     width: 450px;
     height: auto;
     clear: both;
-    padding-top: 20px;
+    padding: 20px 0 0 20px;
     font-size: 1em;
     text-align: right;
 }
@@ -80,4 +84,10 @@
 .fade-out {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+}
+
+/* Font */
+
+.button {
+    font-family: "Merriweather", serif;
 }
