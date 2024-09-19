@@ -1,15 +1,13 @@
 import React from "react";
 
-export default function QuoteAuthor({ quoteObj, colorBackGround, fade }) {
-
-
+export default function QuoteAuthor({ quote, author, color, fade }) {
     return (
         <>
-            <div className={`quote-text ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
-                <i className="fa fa-quote-left"></i><span id="text">{quoteObj.quote}</span>
+            <div className={`quote-text ${fade ? 'fade-out' : 'fade-in'}`} style={{ color }}>
+                <i className="fa fa-quote-left"></i><span id="text">{quote}</span>
             </div>
-            <div className={`quote-author ${fade ? 'fade-out' : 'fade-in'}`} style={{ color: colorBackGround }}>
-                - <span id="author">{quoteObj.author}</span>
+            <div className={`quote-author ${fade ? 'fade-out' : 'fade-in'}`} style={{ color }}>
+                - <span id="author">{author}</span>
             </div>
         </>
     );

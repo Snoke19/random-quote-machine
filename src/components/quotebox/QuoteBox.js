@@ -4,26 +4,33 @@ import QuoteAuthor from "./quote-author/QuoteAuthor";
 import "./QuoteBox.css";
 
 const colors = [
-    '#b5d6ff', '#e08e47', '#141a35', '#ff7d00', '#1d1832', '#ff0f39',
-    '#ff9508', '#700000', '#002876', '#ff0f39', '#f6a6b8', '#03210a'
+    '#FF6F61',  // Warm red with a gentle undertone
+    '#FFB74D',  // Soft orange
+    '#FFD54F',  // Warm golden yellow
+    '#DCE775',  // Muted lime green for contrast
+    '#AED581',  // Light olive green
+    '#81C784',  // Soft mint green
+    '#4DB6AC',  // Muted teal
+    '#64B5F6',  // Gentle sky blue
+    '#7986CB',  // Soft lavender blue
+    '#BA68C8',  // Light purple
+    '#F06292',  // Soft coral pink
+    '#E57373'   // Warm salmon red
 ];
 
 export default function QuoteBox() {
-
     const [quoteObj, setQuoteObj] = useState({ quote: '', author: '' });
     const [colorBackGround, setColorBackGround] = useState(colors[0]);
     const [fade, setFade] = useState(false);
 
     const loadQuote = useCallback(async () => {
         setFade(true);
-
         setTimeout(async () => {
             setColorBackGround(getRandomColor());
             try {
                 const quote = await fetchRandomQuote();
                 setQuoteObj(quote);
-            } catch (error) {
-                console.error('Failed to load quote:', error);
+            } catch {
                 setQuoteObj({ quote: 'Error loading quote', author: '' });
             } finally {
                 setFade(false);
@@ -39,7 +46,6 @@ export default function QuoteBox() {
     }, [colorBackGround]);
 
     useEffect(() => {
-        console.log("run useeffect loadQuote");
         loadQuote();
     }, [loadQuote]);
 
@@ -47,7 +53,12 @@ export default function QuoteBox() {
 
     return (
         <div id="quote-box">
-            <QuoteAuthor quoteObj={quoteObj} colorBackGround={colorBackGround} fade={fade} />
+            <QuoteAuthor
+                quote={quoteObj.quote}
+                author={quoteObj.author}
+                color={colorBackGround}
+                fade={fade}
+            />
             <div className="buttons">
                 <a
                     className="button"
@@ -58,7 +69,13 @@ export default function QuoteBox() {
                     style={{ backgroundColor: colorBackGround }}>
                     <i className="fa fa-twitter"></i>
                 </a>
-                <button className="button" id="new-quote" style={{ backgroundColor: colorBackGround }} onClick={loadQuote}>New quote</button>
+                <button
+                    className="button"
+                    id="new-quote"
+                    style={{ backgroundColor: colorBackGround }}
+                    onClick={loadQuote}>
+                    New quote
+                </button>
             </div>
         </div>
     );
