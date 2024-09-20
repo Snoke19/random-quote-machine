@@ -91,10 +91,10 @@ export default function QuoteBox() {
                     iconClass="fa fa-twitter"
                 />
                 <GroupButtons groupingClass="group-buttons">
-                    <button className="button clipboard-button" style={{ backgroundColor: colorBackGround }} onClick={handleCopy}>
+                    <button className="button clipboard-button" style={{ backgroundColor: colorBackGround }} onClick={handleCopy} aria-label="Copy quote to clipboard">
                         <img src="/images/icons8-copy-24.png" alt="Clipboard" />
                     </button>
-                    <button className="button quote-button" style={{ backgroundColor: colorBackGround }} onClick={loadQuote}>
+                    <button className="button quote-button" style={{ backgroundColor: colorBackGround }} onClick={loadQuote} aria-label="Load new quote">
                         New quote
                     </button>
                 </GroupButtons>
