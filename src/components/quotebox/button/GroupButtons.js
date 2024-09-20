@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-export default function GroupButtons({ className, children }) {
+export default function GroupButtons({ groupingClass, children }) {
     return (
-        <div className={className}>
+        <div className={groupingClass}>
             {children}
         </div>
     );

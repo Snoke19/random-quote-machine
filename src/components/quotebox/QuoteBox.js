@@ -47,6 +47,10 @@ export default function QuoteBox() {
         }
     }
 
+    const getRandomColor = useCallback(() => {
+        return colors[Math.floor(Math.random() * colors.length)];
+    }, []);
+
     const loadQuote = useCallback(async () => {
         setFade(true);
         setTimeout(async () => {
@@ -60,9 +64,7 @@ export default function QuoteBox() {
                 setFade(false);
             }
         }, 500);
-    }, []);
-
-    const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
+    }, [getRandomColor, setQuoteObj]);
 
     useEffect(() => {
         document.body.style.backgroundColor = colorBackGround;
