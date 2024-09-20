@@ -34,44 +34,63 @@
     text-align: right;
 }
 
-#quote-box .buttons {
-    width: 450px;
-    margin: auto;
-    display: block;
-}
-
-#quote-box .buttons .button {
-    height: 38px;
-    border: none;
-    border-radius: 3px;
-    color: #fff;
-    background-color: #333;
-    outline: none;
-    font-size: 0.85em;
-    padding: 8px 18px 6px 18px;
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     margin-top: 30px;
-    opacity: 1;
-    cursor: pointer;
 }
 
-#quote-box .buttons .button:hover {
-    opacity: 0.9;
-}
-
-#quote-box .buttons .button#tweet-quote,
-#quote-box .buttons .button#tumblr-quote {
-    float: left;
-    padding: 0px;
-    padding-top: 8px;
-    text-align: center;
+.tweet-button {
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    color: #fff;
     font-size: 1.2em;
-    margin-right: 5px;
-    height: 30px;
-    width: 40px;
+    transition: background-color 0.3s ease;
 }
 
-#quote-box .buttons .button#new-quote {
-    float: right;
+.group-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.clipboard-button,
+.new-quote-button {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.clipboard-button {
+    width: 24px;
+}
+
+.clipboard-button img {
+    width: 24px;
+    height: 24px;
+}
+
+.button:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
+}
+
+.button:active {
+    box-shadow: none;
+    transform: translateY(0);
 }
 
 /* animation */
