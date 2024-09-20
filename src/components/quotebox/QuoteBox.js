@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
+
 import fetchRandomQuote from "./services/QuoteService";
 import QuoteAuthor from "./quote-author/QuoteAuthor";
 import Notification from "../notification/Notification";
+import SocialButton from "./social-button/SocialButton";
+import GroupButtons from "./button/GroupButtons";
+
 import "./QuoteBox.css";
 
 const colors = [
@@ -72,29 +76,30 @@ export default function QuoteBox() {
     const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteObj.quote)}%22%20${encodeURIComponent(quoteObj.author)}`;
 
     return (
-        <>
-            <div id="quote-box">
-                <QuoteAuthor
-                    quote={quoteObj.quote}
-                    author={quoteObj.author}
-                    color={colorBackGround}
-                    fade={fade}
+        <div id="quote-box">
+            <QuoteAuthor
+                quote={quoteObj.quote}
+                author={quoteObj.author}
+                color={colorBackGround}
+                fade={fade}
+            />
+            <div className="buttons-container">
+                <SocialButton
+                    quoteUrl={tweetQuoteUrl}
+                    colorBackGround={colorBackGround}
+                    title="Tweet this quote!"
+                    iconClass="fa fa-twitter"
                 />
-                <div className="buttons-container">
-                    <a className="button tweet-button" title="Tweet this quote!" target="_top" href={tweetQuoteUrl} style={{ backgroundColor: colorBackGround }}>
-                        <i className="fa fa-twitter"></i>
-                    </a>
-                    <div className="group-buttons">
-                        <button className="button clipboard-button" style={{ backgroundColor: colorBackGround }} onClick={handleCopy}>
-                            <img src="/images/icons8-copy-24.png" alt="Clipboard" />
-                        </button>
-                        <button className="button new-quote-button" style={{ backgroundColor: colorBackGround }} onClick={loadQuote}>
-                            New quote
-                        </button>
-                    </div>
-                </div>
+                <GroupButtons groupingClass="group-buttons">
+                    <button className="button clipboard-button" style={{ backgroundColor: colorBackGround }} onClick={handleCopy}>
+                        <img src="/images/icons8-copy-24.png" alt="Clipboard" />
+                    </button>
+                    <button className="button quote-button" style={{ backgroundColor: colorBackGround }} onClick={loadQuote}>
+                        New quote
+                    </button>
+                </GroupButtons>
             </div>
             <Notification notificationInfo={copyInfo} />
-        </>
+        </div>
     );
 }
