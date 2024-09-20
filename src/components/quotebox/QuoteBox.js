@@ -69,6 +69,10 @@ export default function QuoteBox() {
     useEffect(() => {
         document.body.style.backgroundColor = colorBackGround;
         document.body.style.transition = 'background-color 1s ease';
+
+        return () => {
+            document.body.style.backgroundColor = '';
+        };
     }, [colorBackGround]);
 
     useEffect(() => {
