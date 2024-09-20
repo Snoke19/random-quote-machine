@@ -25,25 +25,23 @@ const colors = [
 
 export default function QuoteBox() {
     const [copyInfo, setCopyInfo] = useState({ show: false, info: '' });
-    const [quoteObj, setQuoteObj] = useState({ quote: '', author: '' });
-    const [colorBackGround, setColorBackGround] = useState(colors[0]);
-    const [fade, setFade] = useState(false);
+    const [quoteBoxSettings, setQuoteBoxSettings] = useState({
+        quote: '',
+        author: '',
+        colorBackGround: colors[0],
+        fade: false
+    });
+
+    const handleCopyNotification = (info) => {
+        setCopyInfo((prevState) => ({ ...prevState, show: true, info }));
+    }
 
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(`${quoteObj.quote} - ${quoteObj.author}`);
-
-            setCopyInfo((prevState) => ({ ...prevState, show: true, info: "The Quote is copied!", }));
-
-            setTimeout(() => {
-                setCopyInfo((prevState) => ({ ...prevState, show: false, }));
-            }, 3000);
+            await navigator.clipboard.writeText(`${quoteBoxSettings.quote} - ${quoteBoxSettings.author}`);
+            handleCopyNotification("The Quote is copied!");
         } catch (error) {
-            setCopyInfo((prevState) => ({ ...prevState, show: true, info: `Failed to copy: ${error.message}`, }));
-
-            setTimeout(() => {
-                setCopyInfo((prevState) => ({ ...prevState, show: false, }));
-            }, 3000);
+            handleCopyNotification(`Failed to copy: ${error.message}`);
         }
     }
 
@@ -52,55 +50,59 @@ export default function QuoteBox() {
     }, []);
 
     const loadQuote = useCallback(async () => {
-        setFade(true);
+        setQuoteBoxSettings(prevState => ({ ...prevState, fade: true }));
         setTimeout(async () => {
-            setColorBackGround(getRandomColor());
+            const newColor = getRandomColor();
             try {
-                const quote = await fetchRandomQuote();
-                setQuoteObj(quote);
+                const { quote, author } = await fetchRandomQuote();
+                setQuoteBoxSettings((prevState) => ({ ...prevState, quote: quote, author: author, colorBackGround: newColor, fade: false }));
             } catch {
-                setQuoteObj({ quote: 'Error loading quote', author: '' });
-            } finally {
-                setFade(false);
+                setQuoteBoxSettings((prevState) => ({ ...prevState, quote: 'Error loading quote', author: '', fade: false }));
             }
         }, 500);
-    }, [getRandomColor, setQuoteObj]);
+    }, [getRandomColor, setQuoteBoxSettings]);
 
     useEffect(() => {
-        document.body.style.backgroundColor = colorBackGround;
-        document.body.style.transition = 'background-color 1s ease';
+        if (copyInfo.show) {
+            const timer = setTimeout(() => {
+                setCopyInfo((prevState) => ({ ...prevState, show: false, info: '' }));
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [copyInfo.show]);
 
-        return () => {
-            document.body.style.backgroundColor = '';
-        };
-    }, [colorBackGround]);
+    useEffect(() => {
+        document.body.style.backgroundColor = quoteBoxSettings.colorBackGround;
+        document.body.style.transition = 'background-color 1s ease';
+        return () => { document.body.style.backgroundColor = ''; };
+    }, [quoteBoxSettings.colorBackGround]);
 
     useEffect(() => {
         loadQuote();
     }, [loadQuote]);
 
-    const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteObj.quote)}%22%20${encodeURIComponent(quoteObj.author)}`;
+    const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteBoxSettings.quote)}%22%20${encodeURIComponent(quoteBoxSettings.author)}`;
 
     return (
         <div id="quote-box">
             <QuoteAuthor
-                quote={quoteObj.quote}
-                author={quoteObj.author}
-                color={colorBackGround}
-                fade={fade}
+                quote={quoteBoxSettings.quote}
+                author={quoteBoxSettings.author}
+                color={quoteBoxSettings.colorBackGround}
+                fadeClass={quoteBoxSettings.fade ? 'fade-out' : 'fade-in'}
             />
             <div className="buttons-container">
                 <SocialButton
                     quoteUrl={tweetQuoteUrl}
-                    colorBackGround={colorBackGround}
+                    colorBackGround={quoteBoxSettings.colorBackGround}
                     title="Tweet this quote!"
                     iconClass="fa fa-twitter"
                 />
                 <GroupButtons groupingClass="group-buttons">
-                    <button className="button clipboard-button" style={{ backgroundColor: colorBackGround }} onClick={handleCopy} aria-label="Copy quote to clipboard">
+                    <button className="button clipboard-button" style={{ backgroundColor: quoteBoxSettings.colorBackGround }} onClick={handleCopy} aria-label="Copy quote to clipboard">
                         <img src="/images/icons8-copy-24.png" alt="Clipboard" />
                     </button>
-                    <button className="button quote-button" style={{ backgroundColor: colorBackGround }} onClick={loadQuote} aria-label="Load new quote">
+                    <button className="button quote-button" style={{ backgroundColor: quoteBoxSettings.colorBackGround }} onClick={loadQuote} aria-label="Load new quote">
                         New quote
                     </button>
                 </GroupButtons>

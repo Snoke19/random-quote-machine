@@ -10,6 +10,6 @@ export default function GroupButtons({ groupingClass, children }) {
 }
 
 GroupButtons.propTypes = {
-    className: PropTypes.string.isRequired,
+    groupingClass: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
 };
