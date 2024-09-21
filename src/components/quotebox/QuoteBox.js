@@ -82,6 +82,8 @@ export default function QuoteBox() {
     }, [loadQuote]);
 
     const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteBoxSettings.quote)}%22%20${encodeURIComponent(quoteBoxSettings.author)}`;
+    const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://your-website.com')}&text=${encodeURIComponent(quoteBoxSettings.quote)} - ${encodeURIComponent(quoteBoxSettings.author)}`;
+    const facebookShareUrl = `https://www.facebook.com`;
 
     return (
         <div id="quote-box">
@@ -92,12 +94,26 @@ export default function QuoteBox() {
                 fadeClass={quoteBoxSettings.fade ? 'fade-out' : 'fade-in'}
             />
             <div className="buttons-container">
-                <SocialButton
-                    quoteUrl={tweetQuoteUrl}
-                    colorBackGround={quoteBoxSettings.colorBackGround}
-                    title="Tweet this quote!"
-                    iconClass="fa fa-twitter"
-                />
+                <GroupButtons groupingClass="group-buttons group-buttons-wrap">
+                    <SocialButton
+                        quoteUrl={tweetQuoteUrl}
+                        colorBackGround={quoteBoxSettings.colorBackGround}
+                        title="Tweet this quote!"
+                        iconClass="fa fa-twitter"
+                    />
+                    <SocialButton
+                        quoteUrl={linkedinShareUrl}
+                        colorBackGround={quoteBoxSettings.colorBackGround}
+                        title="Post linkedin!"
+                        iconClass="fa fa-linkedin"
+                    />
+                    <SocialButton
+                        quoteUrl={facebookShareUrl}
+                        colorBackGround={quoteBoxSettings.colorBackGround}
+                        title="Post facebook!"
+                        iconClass="fa fa-facebook"
+                    />
+                </GroupButtons>
                 <GroupButtons groupingClass="group-buttons">
                     <button className="button clipboard-button" style={{ backgroundColor: quoteBoxSettings.colorBackGround }} onClick={handleCopy} aria-label="Copy quote to clipboard">
                         <img src="/images/icons8-copy-24.png" alt="Clipboard" />
