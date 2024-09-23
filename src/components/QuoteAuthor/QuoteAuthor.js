@@ -1,8 +1,9 @@
 import React from "react";
+import "./QuoteAuthor.css";
 
 export default function QuoteAuthor({ quote, author, color, fadeClass }) {
     return (
-        <div style={{border: `1px dashed ${color}`, padding: '20px', borderRadius: '20px'}}>
+        <div style={{ border: `1px dashed ${color}`, padding: '20px', borderRadius: '20px' }}>
             <div className={`quote-text ${fadeClass}`} style={{ color }}>
                 <i className="fa fa-quote-left"></i><span id="text">{quote}</span>
             </div>

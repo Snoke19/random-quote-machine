@@ -3,15 +3,11 @@ import './Notification.css';
 
 export default function Notification({ notificationInfo }) {
 
-    const { show, info } = notificationInfo;
+    const { visible, message } = notificationInfo;
 
     return (
         <>
-            {show && (
-                <div className="toast">
-                    <p>{info}</p>
-                </div>
-            )}
+            {visible && (<div className="toast"><p>{message}</p></div>)}
         </>
     );
 }

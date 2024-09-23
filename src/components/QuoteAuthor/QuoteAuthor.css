@@ -1,0 +1,20 @@
+.quote-text {
+    padding: 10px 0;
+    font-family: "Merriweather", serif;
+    text-align: center;
+    width: 100%;
+    font-weight: 500;
+    font-size: 1.75em;
+}
+
+.quote-text i {
+    font-size: 1em;
+    margin-right: 0.4em;
+}
+
+.quote-author {
+    font-family: "Lora", serif;
+    padding: 20px 0 0 20px;
+    font-size: 1em;
+    text-align: right;
+}

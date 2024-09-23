@@ -1,5 +1,4 @@
-/* Base Styles */
-#quote-box {
+.quote-box {
     padding: 50px 60px;
     border-radius: 10px;
     position: relative;
@@ -7,29 +6,6 @@
     display: table;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Quote Text Styles */
-#quote-box .quote-text {
-    padding: 10px 0;
-    font-family: "Merriweather", serif;
-    text-align: center;
-    width: 100%;
-    font-weight: 500;
-    font-size: 1.75em;
-}
-
-#quote-box .quote-text i {
-    font-size: 1em;
-    margin-right: 0.4em;
-}
-
-/* Author Text Styles */
-#quote-box .quote-author {
-    font-family: "Lora", serif;
-    padding: 20px 0 0 20px;
-    font-size: 1em;
-    text-align: right;
 }
 
 /* Buttons Container */

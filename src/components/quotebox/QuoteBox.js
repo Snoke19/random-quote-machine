@@ -5,69 +5,64 @@ import "./QuoteBox.css";
 import Tags from "../Tags/Tags";
 import QuoteAuthor from "../QuoteAuthor/QuoteAuthor";
 import Notification from "../Notification/Notification";
-import SocialButton from "./buttons/SocialButton";
-import GroupButtons from "./buttons/GroupButtons";
+import SocialButton from "./Buttons/SocialButton";
+import GroupButtons from "./Buttons/GroupButtons";
 
-import useQuoteBox from "./useQuoteBox";
+import useQuoteBox from "./hooks/useQuoteBox";
+import useQuoteClipboard from "./hooks/useQuoteClipboard";
+import useTag from "../Tags/useTag";
 
 export default function QuoteBox() {
 
     const {
+        quote,
         quoteBoxSettings,
-        tagState,
-        copyInfo,
-        tweetQuoteUrl,
-        linkedinShareUrl,
-        facebookShareUrl,
-        handleCopy,
+        socialLinks,
         loadQuote,
-        removeTag,
-        handleInputChange,
-        addTag,
     } = useQuoteBox();
 
+    const { tagsState, addTag, handleTagInputChange, removeTag } = useTag();
+    const { copyToClipboard, notification } = useQuoteClipboard(quote);
+
+    const socialButtons = [
+        { quoteUrl: socialLinks.tweetQuoteUrl, title: "Tweet this quote!", iconClass: "fa fa-twitter" },
+        { quoteUrl: socialLinks.linkedinShareUrl, title: "Post on LinkedIn!", iconClass: "fa fa-linkedin" },
+        { quoteUrl: socialLinks.facebookShareUrl, title: "Post on Facebook!", iconClass: "fa fa-facebook" },
+    ];
+
     return (
-        <div id="quote-box">
+        <div className="quote-box">
             <QuoteAuthor
-                quote={quoteBoxSettings.quote}
-                author={quoteBoxSettings.author}
+                quote={quote.quote}
+                author={quote.author}
                 color={quoteBoxSettings.colorBackGround}
                 fadeClass={quoteBoxSettings.fade ? 'fade-out' : 'fade-in'}
             />
             <Tags
-                tags={tagState.quoteTags}
+                tags={tagsState.quoteTags}
                 settings={quoteBoxSettings}
                 onRemoveTag={removeTag}
-                tagInputValue={tagState.inputValue}
-                onTagInputChange={handleInputChange}
+                tagInputValue={tagsState.tagInputValue}
+                onTagInputChange={handleTagInputChange}
                 onTagInputKeyDown={addTag}
             />
             <div className="buttons-container">
                 <GroupButtons groupingClass="group-buttons group-buttons-wrap">
-                    <SocialButton
-                        quoteUrl={tweetQuoteUrl}
-                        colorBackGround={quoteBoxSettings.colorBackGround}
-                        title="Tweet this quote!"
-                        iconClass="fa fa-twitter"
-                    />
-                    <SocialButton
-                        quoteUrl={linkedinShareUrl}
-                        colorBackGround={quoteBoxSettings.colorBackGround}
-                        title="Post linkedin!"
-                        iconClass="fa fa-linkedin"
-                    />
-                    <SocialButton
-                        quoteUrl={facebookShareUrl}
-                        colorBackGround={quoteBoxSettings.colorBackGround}
-                        title="Post facebook!"
-                        iconClass="fa fa-facebook"
-                    />
+                    {socialButtons.map((button, id) =>
+                        <SocialButton
+                            key={id}
+                            quoteUrl={button.quoteUrl}
+                            colorBackGround={quoteBoxSettings.colorBackGround}
+                            title={button.title}
+                            iconClass={button.iconClass}
+                        />
+                    )}
                 </GroupButtons>
                 <GroupButtons groupingClass="group-buttons">
                     <button
                         className="button clipboard-button"
                         style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
-                        onClick={handleCopy}
+                        onClick={copyToClipboard}
                         aria-label="Copy quote to clipboard"
                     >
                         <img src="/images/icons8-copy-24.png" alt="Clipboard" />
@@ -82,7 +77,7 @@ export default function QuoteBox() {
                     </button>
                 </GroupButtons>
             </div>
-            <Notification notificationInfo={copyInfo} />
+            <Notification notificationInfo={notification} />
         </div>
     );
 }
