@@ -1,0 +1,63 @@
+/* Tags Input Styles */
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 60px 0 40px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Tag Styles */
+.tags-input-container .tag {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: white;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tags-input-container .tag span {
+    margin-right: 10px;
+    font-family: "Lora", serif;
+}
+
+/* Tag Hover Effects */
+.tags-input-container .tag:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
+}
+
+/* Input Field Styles */
+.tags-input-container .tags-input {
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    flex-grow: 1;
+    background-color: transparent;
+}
+
+/* Remove Tag Button */
+.tags-input-container .remove-tag {
+    background: none;
+    font-family: "Lora", serif;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.tags-input-container .remove-tag:hover {
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
