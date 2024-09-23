@@ -1,3 +1,4 @@
+/* Base Styles */
 #quote-box {
     padding: 50px 60px;
     border-radius: 10px;
@@ -8,13 +9,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Quote Text Styles */
 #quote-box .quote-text {
     padding: 10px 0;
     font-family: "Merriweather", serif;
     text-align: center;
-    width: 450px;
-    height: auto;
-    clear: both;
+    width: 100%;
     font-weight: 500;
     font-size: 1.75em;
 }
@@ -24,36 +24,36 @@
     margin-right: 0.4em;
 }
 
+/* Author Text Styles */
 #quote-box .quote-author {
     font-family: "Lora", serif;
-    width: 450px;
-    height: auto;
-    clear: both;
     padding: 20px 0 0 20px;
     font-size: 1em;
     text-align: right;
 }
 
+/* Buttons Container */
 .buttons-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 30px;
 }
 
+/* Social Button Styles */
 .social-button {
-    text-decoration: none;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    color: #fff;
     font-size: 1.2em;
-    transition: background-color 0.3s ease;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Group Buttons */
 .group-buttons {
     display: flex;
     gap: 10px;
@@ -62,12 +62,12 @@
 .group-buttons-wrap {
     display: flex;
     flex-wrap: wrap;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
+/* Clipboard and Quote Buttons */
 .clipboard-button,
 .quote-button {
-    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,8 +78,10 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: none;
 }
 
+/* Clipboard Button Styles */
 .clipboard-button {
     width: 24px;
 }
@@ -89,6 +91,7 @@
     height: 24px;
 }
 
+/* Button Hover and Active States */
 .button:hover {
     box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
 }
@@ -98,8 +101,7 @@
     transform: translateY(0);
 }
 
-/* animation */
-
+/* Animation Styles */
 .fade-in {
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
@@ -110,9 +112,71 @@
     transition: opacity 0.5s ease-in-out;
 }
 
-/* Font */
-
+/* Font for Buttons */
 .button {
     font-family: "Merriweather", serif;
-    transition: background-color 0.5s ease;
+}
+
+/* Tags Input Styles */
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 60px 0 40px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Tag Styles */
+.tags-input-container .tag {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: white;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tags-input-container .tag span {
+    margin-right: 10px;
+    font-family: "Lora", serif;
+}
+
+/* Tag Hover Effects */
+.tags-input-container .tag:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
+}
+
+/* Input Field Styles */
+.tags-input-container .tags-input {
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    flex-grow: 1;
+    background-color: transparent;
+}
+
+/* Remove Tag Button */
+.tags-input-container .remove-tag {
+    background: none;
+    font-family: "Lora", serif;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.tags-input-container .remove-tag:hover {
+    background-color: rgb(255, 255, 255);
+    color: black;
 }

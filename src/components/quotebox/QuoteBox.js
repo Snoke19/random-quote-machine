@@ -32,6 +32,21 @@ export default function QuoteBox() {
         fade: false
     });
 
+    const [quoteTags, setQuoteTags] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+
+    const handleKeyDown = (event) => {
+        let value = inputValue.trim();
+        if (event.key === 'Enter' && value !== '') {
+            setQuoteTags((prevTags) => [...prevTags, value]);
+            setInputValue('');
+        }
+    };
+
+    const removeTag = (indexToRemove) => {
+        setQuoteTags((prevTags) => prevTags.filter((_, index) => index !== indexToRemove));
+    };
+
     const handleCopyNotification = (info) => {
         setCopyInfo((prevState) => ({ ...prevState, show: true, info }));
     }
@@ -83,7 +98,7 @@ export default function QuoteBox() {
 
     const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quoteBoxSettings.quote)}%22%20${encodeURIComponent(quoteBoxSettings.author)}`;
     const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://your-website.com')}&text=${encodeURIComponent(quoteBoxSettings.quote)} - ${encodeURIComponent(quoteBoxSettings.author)}`;
-    const facebookShareUrl = `https://www.facebook.com`;
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.instagram.com/p/C_SkL_iIZVs/?locale=ru&hl=am-et')}`;
 
     return (
         <div id="quote-box">
@@ -93,6 +108,22 @@ export default function QuoteBox() {
                 color={quoteBoxSettings.colorBackGround}
                 fadeClass={quoteBoxSettings.fade ? 'fade-out' : 'fade-in'}
             />
+            <div className="tags-input-container">
+                {quoteTags.map((tag, index) => (
+                    <div key={index} className="tag" style={{ backgroundColor: quoteBoxSettings.colorBackGround }}>
+                        <span>{tag}</span>
+                        <button className="remove-tag" onClick={() => removeTag(index)}>&times;</button>
+                    </div>
+                ))}
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Enter tags"
+                    className="tags-input"
+                />
+            </div>
             <div className="buttons-container">
                 <GroupButtons groupingClass="group-buttons group-buttons-wrap">
                     <SocialButton
