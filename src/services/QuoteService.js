@@ -1,13 +1,28 @@
-const QUOTE_API_URL = "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json";
+const QUOTE_API_URL = "http://localhost:8080/random/quote";
 
-export default async function fetchRandomQuote() {
-    const response = await fetch(QUOTE_API_URL);
-    if (!response.ok) throw new Error('Network response was not ok');
+export default async function fetchRandomQuoteByCategories(categories) {
+    const urlWithParams = new URL(QUOTE_API_URL);
+
+    if (categories) {
+        const categoriesArray = Array.isArray(categories) ? categories : [categories];
+        const categoriesStr = categoriesArray.join(',');
+        urlWithParams.searchParams.append("categories", categoriesStr);
+    }
+
+    const response = await fetch(urlWithParams);
+    if (!response.ok) {
+        const errorResponse = await response.json();
+
+        console.error("Error fetching quote:", {
+            message: errorResponse.message,
+            code: errorResponse.code,
+            details: JSON.stringify(errorResponse.details),
+            path: errorResponse.path,
+        });
+
+        throw new Error('Failed to fetch quote:');
+    }
 
     const data = await response.json();
-    return getRandomQuote(data.quotes);
-}
-
-function getRandomQuote(quotes) {
-    return quotes[Math.floor(Math.random() * quotes.length)];
+    return data;
 }

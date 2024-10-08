@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef } from "react";
-
+import Notification from "../Notification/Notification";
 import './Tags.css';
 
 const Tag = memo(({ tag, index, onRemoveTag, backgroundColor }) => (
@@ -9,7 +9,7 @@ const Tag = memo(({ tag, index, onRemoveTag, backgroundColor }) => (
     </div>
 ));
 
-export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTagInputChange, onTagInputKeyDown }) {
+export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTagInputChange, onTagInputKeyDown, notificationTag }) {
 
     const inputRef = useRef(null);
 
@@ -18,25 +18,28 @@ export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTag
     }, []);
 
     return (
-        <div className="tags-input-container">
-            {tags.map((tag, index) => (
-                <Tag
-                    key={`${tag}-${index}`}
-                    tag={tag}
-                    index={index}
-                    onRemoveTag={onRemoveTag}
-                    backgroundColor={settings.colorBackGround}
+        <>
+            <div className="tags-input-container">
+                {tags.map((tag, index) => (
+                    <Tag
+                        key={`${tag}-${index}`}
+                        tag={tag}
+                        index={index}
+                        onRemoveTag={onRemoveTag}
+                        backgroundColor={settings.colorBackGround}
+                    />
+                ))}
+                <input
+                    type="text"
+                    ref={inputRef}
+                    value={tagInputValue}
+                    onChange={onTagInputChange}
+                    onKeyDown={onTagInputKeyDown}
+                    placeholder="Enter tags"
+                    className="tags-input"
                 />
-            ))}
-            <input
-                type="text"
-                ref={inputRef}
-                value={tagInputValue}
-                onChange={onTagInputChange}
-                onKeyDown={onTagInputKeyDown}
-                placeholder="Enter tags"
-                className="tags-input"
-            />
-        </div>
+            </div>
+            <Notification notificationInfo={notificationTag} />
+        </>
     );
 }

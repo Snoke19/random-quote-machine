@@ -14,20 +14,18 @@ import useTag from "../Tags/useTag";
 
 export default function QuoteBox() {
 
-    const {
-        quote,
-        quoteBoxSettings,
-        socialLinks,
-        loadQuote,
-    } = useQuoteBox();
-
-    const { tagsState, addTag, handleTagInputChange, removeTag } = useTag();
+    const { tagsState, addTag, handleTagInputChange, removeTag, notificationTag } = useTag();
+    const { quote, quoteBoxSettings, loadQuote, } = useQuoteBox(tagsState.quoteTags);
     const { copyToClipboard, notification } = useQuoteClipboard(quote);
 
+    const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
+    const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("")}`;
+
     const socialButtons = [
-        { quoteUrl: socialLinks.tweetQuoteUrl, title: "Tweet this quote!", iconClass: "fa fa-twitter" },
-        { quoteUrl: socialLinks.linkedinShareUrl, title: "Post on LinkedIn!", iconClass: "fa fa-linkedin" },
-        { quoteUrl: socialLinks.facebookShareUrl, title: "Post on Facebook!", iconClass: "fa fa-facebook" },
+        { quoteUrl: tweetQuoteUrl, title: "Tweet this quote!", iconClass: "fa fa-twitter" },
+        { quoteUrl: linkedinShareUrl, title: "Post on LinkedIn!", iconClass: "fa fa-linkedin" },
+        { quoteUrl: facebookShareUrl, title: "Post on Facebook!", iconClass: "fa fa-facebook" },
     ];
 
     return (
@@ -45,6 +43,7 @@ export default function QuoteBox() {
                 tagInputValue={tagsState.tagInputValue}
                 onTagInputChange={handleTagInputChange}
                 onTagInputKeyDown={addTag}
+                notificationTag={notificationTag}
             />
             <div className="buttons-container">
                 <GroupButtons groupingClass="group-buttons group-buttons-wrap">
@@ -70,7 +69,7 @@ export default function QuoteBox() {
                     <button
                         className="button quote-button"
                         style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
-                        onClick={loadQuote}
+                        onClick={() => loadQuote(tagsState.quoteTags)}
                         aria-label="Load new quote"
                     >
                         New quote
