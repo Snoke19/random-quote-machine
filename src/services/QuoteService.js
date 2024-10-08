@@ -43,9 +43,7 @@ const TIMEOUT_MS = 50;
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API|Fetch API Documentation}
  */
 export default async function fetchRandomQuoteByCategories(categories) {
-    const urlWithParams = new URL(RANDOM_QUOTE_API_URL);
-
-    appendCategoriesToUrl(urlWithParams, categories);
+    const urlWithParams = new URL(`${RANDOM_QUOTE_API_URL}?${prepareURLSearchParams(categories)}`);
 
     try {
         const controller = new AbortController();
@@ -77,11 +75,12 @@ export default async function fetchRandomQuoteByCategories(categories) {
     }
 }
 
-function appendCategoriesToUrl(url, categories) {
+function prepareURLSearchParams(categories) {
     if (categories) {
         const categoriesArray = Array.isArray(categories) ? categories : [categories];
         const categoriesStr = categoriesArray.join(',');
-        url.searchParams.append("categories", categoriesStr);
+        const params = new URLSearchParams({ 'categories': categoriesStr });
+        return params;
     }
 }
 
@@ -94,8 +93,5 @@ function handleErrorResponse(errorResponse) {
         path: errorResponse.path || "Unknown path",
         timestamp: new Date(errorResponse.timestamp || Date.now())
     });
-
-    const errorObject = new Error('Failed to fetch quote');
-    errorObject.details = errorResponse || {};
-    throw errorObject;
+    throw new Error('Failed to fetch quote', { cause: errorResponse || {} });
 }
