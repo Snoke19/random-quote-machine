@@ -1,15 +1,11 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export default function GroupButtons({ groupingClass, children }) {
-    return (
-        <div className={groupingClass}>
-            {children}
-        </div>
-    );
+  return <div className={groupingClass}>{children}</div>;
 }
 
 GroupButtons.propTypes = {
-    groupingClass: PropTypes.string.isRequired,
-    children: PropTypes.node.isRequired,
+  groupingClass: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };

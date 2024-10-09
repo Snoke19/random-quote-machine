@@ -1,94 +1,100 @@
 .quote-box {
-    padding: 50px 60px;
-    border-radius: 10px;
-    position: relative;
-    width: 450px;
-    display: table;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 50px 60px;
+  border-radius: 10px;
+  position: relative;
+  width: 450px;
+  display: table;
+  background-color: #fff;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Buttons Container */
 .buttons-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* Social Button Styles */
 .social-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    font-size: 1.2em;
-    color: #fff;
-    text-decoration: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 /* Group Buttons */
 .group-buttons {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .group-buttons-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 /* Clipboard and Quote Buttons */
 .clipboard-button,
 .quote-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 38px;
-    padding: 8px 18px;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  border: none;
 }
 
 /* Clipboard Button Styles */
 .clipboard-button {
-    width: 24px;
+  width: 24px;
 }
 
 .clipboard-button img {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 /* Button Hover and Active States */
 .button:hover {
-    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
 }
 
 .button:active {
-    box-shadow: none;
-    transform: translateY(0);
+  box-shadow: none;
+  transform: translateY(0);
 }
 
 /* Animation Styles */
 .fade-in {
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
 /* Font for Buttons */
 .button {
-    font-family: "Merriweather", serif;
+  font-family: "Merriweather", serif;
 }
