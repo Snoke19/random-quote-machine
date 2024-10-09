@@ -14,7 +14,7 @@ import useTag from "../Tags/useTag";
 
 export default function QuoteBox() {
 
-    const { tagsState, addTag, handleTagInputChange, removeTag, notificationTag } = useTag();
+    const { tagsState, addTag, handleTagInputChange, removeTag, notificationTag, suggestionTags } = useTag();
     const { quote, quoteBoxSettings, loadQuote, } = useQuoteBox(tagsState.quoteTags);
     const { copyToClipboard, notification } = useQuoteClipboard(quote);
 
@@ -44,6 +44,7 @@ export default function QuoteBox() {
                 onTagInputChange={handleTagInputChange}
                 onTagInputKeyDown={addTag}
                 notificationTag={notificationTag}
+                suggestionTags={suggestionTags}
             />
             <div className="buttons-container">
                 <GroupButtons groupingClass="group-buttons group-buttons-wrap">

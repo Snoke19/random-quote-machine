@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
+import fetchCategoriesByName from "../../services/CategoryService";
 
 export default function useTag() {
 
     const [tagsState, setTagState] = useState({ quoteTags: ['love'], tagInputValue: '' });
     const [notificationTag, setNotificationTag] = useState({ visible: false, message: '' });
+    const [suggestionTags, setSuggestionTags] = useState([]);
 
     const showNotification = (message) => {
         setNotificationTag((prevState) => ({ ...prevState, visible: true, message }));
@@ -26,14 +28,30 @@ export default function useTag() {
                 quoteTags: [...prevState.quoteTags, value],
                 tagInputValue: ''
             }));
+            setSuggestionTags([]);
         }
     }, [tagsState.quoteTags]);
 
-    const handleTagInputChange = useCallback((e) => {
-        setTagState((prevState) => ({
-            ...prevState,
-            tagInputValue: e.target.value
-        }));
+    const onTagInputKeyDownRemove = (e) => {
+        console.log(e.key);
+        if (e.key === 'Backspace') {
+            removeTag(tagsState.quoteTags.length - 1);
+        }
+    }
+
+    const handleTagInputChange = useCallback(async (e) => {
+        const value = e.target.value;
+        setTagState((prevState) => ({ ...prevState, tagInputValue: value }));
+
+        if (value.length >= 1) {
+            try {
+                const suggestedCategories = await fetchCategoriesByName(value);
+                setSuggestionTags(suggestedCategories);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+                showNotification("An error occurred while fetching categories.");
+            }
+        }
     }, []);
 
     const removeTag = useCallback((indexToRemove) => {
@@ -53,7 +71,7 @@ export default function useTag() {
     }, [notificationTag.visible]);
 
     return {
-        tagsState, addTag, handleTagInputChange, removeTag, notificationTag
+        tagsState, addTag, handleTagInputChange, removeTag, onTagInputKeyDownRemove, notificationTag, suggestionTags
     }
 }
 

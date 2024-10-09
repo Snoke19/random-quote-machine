@@ -9,7 +9,7 @@ const Tag = memo(({ tag, index, onRemoveTag, backgroundColor }) => (
     </div>
 ));
 
-export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTagInputChange, onTagInputKeyDown, notificationTag }) {
+export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTagInputChange, onTagInputKeyDown, notificationTag, suggestionTags }) {
 
     const inputRef = useRef(null);
 
@@ -30,6 +30,7 @@ export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTag
                     />
                 ))}
                 <input
+                    list="suggestedCategories" id="category" name="category" autoComplete="off"
                     type="text"
                     ref={inputRef}
                     value={tagInputValue}
@@ -38,6 +39,11 @@ export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTag
                     placeholder="Enter tags"
                     className="tags-input"
                 />
+                <datalist id="suggestedCategories">
+                    {suggestionTags.map((item, key) =>
+                        <option key={key} value={item.name} />
+                    )}
+                </datalist>
             </div>
             <Notification notificationInfo={notificationTag} />
         </>
