@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import "./QuoteAuthor.css";
 
 export default function QuoteAuthor({ quote, author, color, fadeClass }) {
@@ -12,4 +14,11 @@ export default function QuoteAuthor({ quote, author, color, fadeClass }) {
             </div>
         </div>
     );
+}
+
+QuoteAuthor.propTypes = {
+    quote: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    fadeClass: PropTypes.string.isRequired,
 }

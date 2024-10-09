@@ -1,13 +1,14 @@
 import React, { memo, useEffect, useRef } from "react";
+import PropTypes from 'prop-types';
 import Notification from "../Notification/Notification";
 import './Tags.css';
 
-const Tag = memo(({ tag, index, onRemoveTag, backgroundColor }) => (
-    <div className="tag" style={{ backgroundColor }}>
+const Tag = memo(function Tag({ tag, index, onRemoveTag, backgroundColor }) {
+    return (<div className="tag" style={{ backgroundColor }}>
         <span>{tag}</span>
         <button className="remove-tag" onClick={() => onRemoveTag(index)} aria-label={`Remove tag ${tag}`}>&times;</button>
-    </div>
-));
+    </div>)
+});
 
 export default function Tags({ tags, settings, tagInputValue, onRemoveTag, onTagInputChange, onKeyDownButtonsAddOrRemove, notificationTag, suggestionTags }) {
 
@@ -49,3 +50,21 @@ export default function Tags({ tags, settings, tagInputValue, onRemoveTag, onTag
         </>
     );
 }
+
+Tag.propTypes = {
+    tag: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired,
+    onRemoveTag: PropTypes.func.isRequired,
+    backgroundColor: PropTypes.string.isRequired,
+};
+
+Tags.propTypes = {
+    suggestionTags: PropTypes.array.isRequired,
+    tags: PropTypes.array.isRequired,
+    settings: PropTypes.object.isRequired,
+    tagInputValue: PropTypes.string.isRequired,
+    onRemoveTag: PropTypes.func.isRequired,
+    onTagInputChange: PropTypes.func.isRequired,
+    onKeyDownButtonsAddOrRemove: PropTypes.func.isRequired,
+    notificationTag: PropTypes.object.isRequired,
+};
