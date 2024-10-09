@@ -24,8 +24,9 @@ export default function useTag() {
         }
 
         if (e.key === 'Enter' && !tagsState.quoteTags.includes(value)) {
+            const categoryRemovedSlash = [...value].filter(data => data !== '/' && data !== '\\').join("");
             setTagState((prevState) => ({
-                quoteTags: [...prevState.quoteTags, value],
+                quoteTags: [...prevState.quoteTags, categoryRemovedSlash],
                 tagInputValue: ''
             }));
             setSuggestionTags([]);
@@ -45,11 +46,11 @@ export default function useTag() {
 
         if (value.length >= 1) {
             try {
-                const suggestedCategories = await fetchCategoriesByName(value);
+                const categoryRemovedSlash = [...value].filter(data => data !== '/' && data !== '\\').join("");
+                const suggestedCategories = await fetchCategoriesByName(categoryRemovedSlash);
                 setSuggestionTags(suggestedCategories);
             } catch (error) {
-                console.error("Error fetching categories:", error);
-                showNotification("An error occurred while fetching categories.");
+                showNotification(error.message);
             }
         }
     }, []);

@@ -24,13 +24,19 @@ export default function useQuoteBox(initDefaultCategories) {
           setQuoteBoxSettings((prevState) => ({ ...prevState, colorBackGround: newColor, fade: false, }));
 
         } catch (error) {
+
           const errorDetails = error.cause;
-          if (errorDetails.type === 'NOT_EMPTY_VALIDATION') {
-            setQuote((prevState) => ({ ...prevState, quote: errorDetails.details['categories'], author: "", }));
-          } else if (errorDetails.type === 'NOT_FOUND_ENTITY') {
-            setQuote((prevState) => ({ ...prevState, quote: errorDetails.message, author: "", }));
+
+          if (errorDetails) {
+            if (errorDetails.type === 'NOT_EMPTY_VALIDATION') {
+              setQuote((prevState) => ({ ...prevState, quote: errorDetails.details['categories'], author: "", }));
+            } else if (errorDetails.type === 'NOT_FOUND_ENTITY') {
+              setQuote((prevState) => ({ ...prevState, quote: errorDetails.message, author: "", }));
+            } else {
+              setQuote((prevState) => ({ ...prevState, quote: "Error loading quote", author: "", }));
+            }
           } else {
-            setQuote((prevState) => ({ ...prevState, quote: "Error loading quote", author: "", }));
+            setQuote((prevState) => ({ ...prevState, quote: error.message, author: "", }));
           }
 
           setQuoteBoxSettings((prevState) => ({ ...prevState, fade: false }));
