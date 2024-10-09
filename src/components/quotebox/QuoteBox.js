@@ -10,11 +10,11 @@ import GroupButtons from "./Buttons/GroupButtons";
 
 import useQuoteBox from "./hooks/useQuoteBox";
 import useQuoteClipboard from "./hooks/useQuoteClipboard";
-import useTag from "../Tags/useTag";
+import useTag from "../Tags/hooks/useTag";
 
 export default function QuoteBox() {
 
-    const { tagsState, addTag, handleTagInputChange, removeTag, notificationTag, suggestionTags } = useTag();
+    const { tagsState, handleTagInputChange, removeTag, onKeyDownButtonsAddOrRemove, notificationTag, suggestionTags } = useTag();
     const { quote, quoteBoxSettings, loadQuote, } = useQuoteBox(tagsState.quoteTags);
     const { copyToClipboard, notification } = useQuoteClipboard(quote);
 
@@ -39,10 +39,10 @@ export default function QuoteBox() {
             <Tags
                 tags={tagsState.quoteTags}
                 settings={quoteBoxSettings}
-                onRemoveTag={removeTag}
                 tagInputValue={tagsState.tagInputValue}
+                onRemoveTag={removeTag}
                 onTagInputChange={handleTagInputChange}
-                onTagInputKeyDown={addTag}
+                onKeyDownButtonsAddOrRemove={onKeyDownButtonsAddOrRemove}
                 notificationTag={notificationTag}
                 suggestionTags={suggestionTags}
             />

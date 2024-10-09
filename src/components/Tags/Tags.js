@@ -9,7 +9,7 @@ const Tag = memo(({ tag, index, onRemoveTag, backgroundColor }) => (
     </div>
 ));
 
-export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTagInputChange, onTagInputKeyDown, notificationTag, suggestionTags }) {
+export default function Tags({ tags, settings, tagInputValue, onRemoveTag, onTagInputChange, onKeyDownButtonsAddOrRemove, notificationTag, suggestionTags }) {
 
     const inputRef = useRef(null);
 
@@ -35,7 +35,7 @@ export default function Tags({ tags, settings, onRemoveTag, tagInputValue, onTag
                     ref={inputRef}
                     value={tagInputValue}
                     onChange={onTagInputChange}
-                    onKeyDown={onTagInputKeyDown}
+                    onKeyDown={onKeyDownButtonsAddOrRemove}
                     placeholder="Enter tags"
                     className="tags-input"
                 />

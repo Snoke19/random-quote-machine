@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import fetchCategoriesByName from "../../services/CategoryService";
+import fetchCategoriesByName from "../../../services/CategoryService";
 
 export default function useTag() {
 
@@ -9,6 +9,16 @@ export default function useTag() {
 
     const showNotification = (message) => {
         setNotificationTag((prevState) => ({ ...prevState, visible: true, message }));
+    }
+
+    const onKeyDownButtonsAddOrRemove = (e) => {
+        if (e.key === 'Enter') {
+            addTag(e);
+        }
+
+        if (e.key === 'Backspace') {
+            removeTagByBackspace(e);
+        }
     }
 
     const addTag = useCallback((e) => {
@@ -33,8 +43,7 @@ export default function useTag() {
         }
     }, [tagsState.quoteTags]);
 
-    const onTagInputKeyDownRemove = (e) => {
-        console.log(e.key);
+    const removeTagByBackspace = (e) => {
         if (e.key === 'Backspace') {
             removeTag(tagsState.quoteTags.length - 1);
         }
@@ -72,7 +81,7 @@ export default function useTag() {
     }, [notificationTag.visible]);
 
     return {
-        tagsState, addTag, handleTagInputChange, removeTag, onTagInputKeyDownRemove, notificationTag, suggestionTags
+        tagsState, suggestionTags, notificationTag, handleTagInputChange, removeTag, onKeyDownButtonsAddOrRemove,
     }
 }
 
