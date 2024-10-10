@@ -1,0 +1,10 @@
+services:
+  random-quote-machine-frontend:
+    image: random-quote-machine:v7
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000

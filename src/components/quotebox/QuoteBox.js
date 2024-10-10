@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 import "./QuoteBox.css";
 
@@ -13,6 +13,8 @@ import useQuoteClipboard from "./hooks/useQuoteClipboard";
 import useTag from "../Tags/hooks/useTag";
 
 export default function QuoteBox() {
+  const idSocialButton = useId();
+
   const {
     tagsState,
     handleTagInputChange,
@@ -70,7 +72,7 @@ export default function QuoteBox() {
         <GroupButtons groupingClass="group-buttons group-buttons-wrap">
           {socialButtons.map((button, id) => (
             <SocialButton
-              key={id}
+              key={idSocialButton + id}
               quoteUrl={button.quoteUrl}
               colorBackGround={quoteBoxSettings.colorBackGround}
               title={button.title}
