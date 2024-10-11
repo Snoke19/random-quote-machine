@@ -1,33 +1,19 @@
-import { useState, useEffect } from "react";
+import useNotification from "../../Notification/hooks/useNotification";
 
 export default function useQuoteClipboard(quote) {
-  const [notification, setNotification] = useState({
-    visible: false,
-    message: "",
-  });
+  const {
+    notification: clipboardNotification,
+    displayNotification: showClipboardNotification,
+  } = useNotification(quote);
 
-  const showNotification = (message) => {
-    setNotification((prevState) => ({ ...prevState, visible: true, message }));
-  };
-
-  const copyToClipboard = createClipboardHandler(quote, showNotification);
-
-  useEffect(() => {
-    if (notification.visible) {
-      const timer = setTimeout(() => {
-        setNotification((prevState) => ({
-          ...prevState,
-          visible: false,
-          message: "",
-        }));
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification.visible]);
+  const copyToClipboard = createClipboardHandler(
+    quote,
+    showClipboardNotification
+  );
 
   return {
+    clipboardNotification,
     copyToClipboard,
-    notification,
   };
 }
 
