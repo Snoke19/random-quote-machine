@@ -10,23 +10,22 @@ import GroupButtons from "./Buttons/GroupButtons";
 
 import useQuoteBox from "./hooks/useQuoteBox";
 import useQuoteClipboard from "./hooks/useQuoteClipboard";
-import useTag from "../Tags/hooks/useTag";
+import useTagManager from "../Tags/hooks/useTagManager";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
 
   const {
-    tagsState,
+    tagState,
+    suggestedTags,
+    tagNotification,
     handleTagInputChange,
     removeTag,
-    onKeyDownButtonsAddOrRemove,
-    notificationTag,
-    suggestionTags,
-  } = useTag();
-  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(
-    tagsState.quoteTags
-  );
-  const { copyToClipboard, notification } = useQuoteClipboard(quote);
+    handleKeyDown,
+  } = useTagManager();
+
+  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(tagState.tags);
+  const { clipboardNotification, copyToClipboard } = useQuoteClipboard(quote);
 
   const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
@@ -59,14 +58,14 @@ export default function QuoteBox() {
         fadeClass={quoteBoxSettings.fade ? "fade-out" : "fade-in"}
       />
       <Tags
-        tags={tagsState.quoteTags}
+        tags={tagState.tags}
         settings={quoteBoxSettings}
-        tagInputValue={tagsState.tagInputValue}
+        tagInputValue={tagState.tagInput}
         onRemoveTag={removeTag}
         onTagInputChange={handleTagInputChange}
-        onKeyDownButtonsAddOrRemove={onKeyDownButtonsAddOrRemove}
-        notificationTag={notificationTag}
-        suggestionTags={suggestionTags}
+        onKeyDownButtonsAddOrRemove={handleKeyDown}
+        notificationTag={tagNotification}
+        suggestionTags={suggestedTags}
       />
       <div className="buttons-container">
         <GroupButtons groupingClass="group-buttons group-buttons-wrap">
@@ -92,14 +91,14 @@ export default function QuoteBox() {
           <button
             className="button quote-button"
             style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
-            onClick={() => loadQuote(tagsState.quoteTags)}
+            onClick={() => loadQuote(tagState.quoteTags)}
             aria-label="Load new quote"
           >
             New quote
           </button>
         </GroupButtons>
       </div>
-      <Notification notificationInfo={notification} />
+      <Notification notificationInfo={clipboardNotification} />
     </div>
   );
 }

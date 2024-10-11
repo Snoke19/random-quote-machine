@@ -61,7 +61,7 @@ export default function Tags({
         />
         <datalist id="suggestedCategories">
           {suggestionTags.map((item, key) => (
-            <option key={key} value={item.name} />
+            <option key={`${item}-${key}`} value={item.name} />
           ))}
         </datalist>
       </div>
