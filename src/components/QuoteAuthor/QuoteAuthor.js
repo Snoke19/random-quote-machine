@@ -17,7 +17,7 @@ export default function QuoteAuthor({ quote, author, color, fadeClass }) {
         <span id="text">{quote}</span>
       </div>
       <div className={`quote-author ${fadeClass}`} style={{ color }}>
-        - <span id="author">{author}</span>
+        {author && <span id="author">- {author}</span>}
       </div>
     </div>
   );

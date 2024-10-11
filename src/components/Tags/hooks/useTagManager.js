@@ -40,8 +40,8 @@ export default function useTagManager() {
       if (!tagState.tags.includes(inputValue)) {
         const sanitizedTag = removeSlashes(inputValue);
         setTagState((prevState) => ({
-          quoteTags: [...prevState.quoteTags, sanitizedTag],
-          tagInputValue: "",
+          tags: [...prevState.tags, sanitizedTag],
+          tagInput: "",
         }));
         setSuggestedTags([]);
       }
