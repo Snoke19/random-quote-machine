@@ -3,7 +3,7 @@ import React, { useId } from "react";
 import "./QuoteBox.css";
 
 import Categories from "../Categories/Categories";
-import QuoteAuthor from "../QuoteAuthor/QuoteAuthor";
+import QuoteAndAuthor from "../QuoteAndAuthor/QuoteAndAuthor";
 import Notification from "../Notification/Notification";
 import SocialButton from "../Buttons/SocialButton";
 import GroupButtons from "../Buttons/GroupButtons";
@@ -51,7 +51,7 @@ export default function QuoteBox() {
 
   return (
     <div className="quote-box">
-      <QuoteAuthor
+      <QuoteAndAuthor
         quote={quote.quote}
         author={quote.author}
         color={quoteBoxSettings.colorBackGround}
