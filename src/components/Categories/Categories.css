@@ -1,41 +1,37 @@
-/* Tags Input Styles */
-.tags-input-container {
+/* Categories Input Styles */
+.categories-input-container {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   margin: 60px 0 40px 0;
   border-radius: 5px;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Tag Styles */
-.tags-input-container .tag {
+/* Category Styles */
+.categories-input-container .category {
   display: flex;
   align-items: center;
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 14px;
   color: white;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.tags-input-container .tag span {
+.categories-input-container .category span {
   margin-right: 5px;
   font-family: "Lora", serif;
 }
 
-/* Tag Hover Effects */
-.tags-input-container .tag:hover {
+/* Category Hover Effects */
+.categories-input-container .category:hover {
   box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
 }
 
 /* Input Field Styles */
-.tags-input-container .tags-input {
+.categories-input-container .categories-input {
   border: none;
   outline: none;
   padding: 5px 10px;
@@ -44,8 +40,8 @@
   background-color: transparent;
 }
 
-/* Remove Tag Button */
-.tags-input-container .remove-tag {
+/* Remove Category Button */
+.categories-input-container .remove-category {
   background: none;
   font-family: "Lora", serif;
   border: none;
@@ -58,12 +54,10 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.tags-input-container .remove-tag:hover {
+.categories-input-container .remove-category:hover {
   background-color: rgb(255, 255, 255);
   color: black;
 }

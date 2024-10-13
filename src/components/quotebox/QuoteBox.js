@@ -2,7 +2,7 @@ import React, { useId } from "react";
 
 import "./QuoteBox.css";
 
-import Tags from "../Tags/Tags";
+import Categories from "../Categories/Categories";
 import QuoteAuthor from "../QuoteAuthor/QuoteAuthor";
 import Notification from "../Notification/Notification";
 import SocialButton from "../Buttons/SocialButton";
@@ -10,21 +10,21 @@ import GroupButtons from "../Buttons/GroupButtons";
 
 import useQuoteBox from "./hooks/useQuoteBox";
 import useQuoteClipboard from "./hooks/useQuoteClipboard";
-import useTagManager from "../Tags/hooks/useTagManager";
+import useCategoryManager from "../Categories/hooks/useCategoryManager";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
 
   const {
-    tagState,
-    suggestedTags,
-    tagNotification,
-    handleTagInputChange,
-    removeTag,
+    categoryState,
+    suggestedCategories,
+    categoryNotification,
+    handleCategoryInputChange,
+    removeCategory,
     handleKeyDown,
-  } = useTagManager();
+  } = useCategoryManager();
 
-  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(tagState.tags);
+  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(categoryState.categories);
   const { clipboardNotification, copyToClipboard } = useQuoteClipboard(quote);
 
   const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
@@ -57,15 +57,15 @@ export default function QuoteBox() {
         color={quoteBoxSettings.colorBackGround}
         fadeClass={quoteBoxSettings.fade ? "fade-out" : "fade-in"}
       />
-      <Tags
-        tags={tagState.tags}
+      <Categories
+        categories={categoryState.categories}
         settings={quoteBoxSettings}
-        tagInputValue={tagState.tagInput}
-        onRemoveTag={removeTag}
-        onTagInputChange={handleTagInputChange}
+        categoryInputValue={categoryState.categoryInput}
+        onRemoveCategory={removeCategory}
+        onCategoryInputChange={handleCategoryInputChange}
         onKeyDown={handleKeyDown}
-        notificationTag={tagNotification}
-        suggestionTags={suggestedTags}
+        notificationCategory={categoryNotification}
+        suggestionCategories={suggestedCategories}
       />
       <div className="buttons-container">
         <GroupButtons groupingClass="group-buttons group-buttons-wrap">
@@ -91,7 +91,7 @@ export default function QuoteBox() {
           <button
             className="button quote-button"
             style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
-            onClick={() => loadQuote(tagState.quoteTags)}
+            onClick={() => loadQuote(categoryState.categories)}
             aria-label="Load new quote"
           >
             New quote

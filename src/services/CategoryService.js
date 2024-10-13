@@ -55,10 +55,10 @@ function handleError(error) {
 
 const isCategoryName = (value) => {
   if (value === null)
-    return { valid: false, message: "Cannot add null tag value!" };
+    return { valid: false, message: "Cannot add null category value!" };
   if (typeof str === "string" && value.length === 0)
-    return { valid: false, message: "Cannot add empty tag value!" };
+    return { valid: false, message: "Cannot add empty category value!" };
   if (!isNaN(Number(value)))
-    return { valid: false, message: "Cannot add tag with only numbers!" };
+    return { valid: false, message: "Cannot add category with only numbers!" };
   return { valid: true };
 };
