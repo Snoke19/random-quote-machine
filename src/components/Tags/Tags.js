@@ -20,18 +20,18 @@ const Tag = memo(function Tag({ tag, index, onRemoveTag, backgroundColor }) {
 
 export default function Tags({
   tags,
-  settings,
+  settings: { colorBackGround },
   tagInputValue,
   onRemoveTag,
   onTagInputChange,
-  onKeyDownButtonsAddOrRemove,
+  onKeyDown,
   notificationTag,
   suggestionTags,
 }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   return (
@@ -43,7 +43,7 @@ export default function Tags({
             tag={tag}
             index={index}
             onRemoveTag={onRemoveTag}
-            backgroundColor={settings.colorBackGround}
+            backgroundColor={colorBackGround}
           />
         ))}
         <input
@@ -55,7 +55,7 @@ export default function Tags({
           ref={inputRef}
           value={tagInputValue}
           onChange={onTagInputChange}
-          onKeyDown={onKeyDownButtonsAddOrRemove}
+          onKeyDown={onKeyDown}
           placeholder="Enter tags"
           className="tags-input"
         />
@@ -78,12 +78,19 @@ Tag.propTypes = {
 };
 
 Tags.propTypes = {
-  suggestionTags: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  settings: PropTypes.shape({
+    colorBackGround: PropTypes.string.isRequired,
+  }).isRequired,
   tagInputValue: PropTypes.string.isRequired,
   onRemoveTag: PropTypes.func.isRequired,
   onTagInputChange: PropTypes.func.isRequired,
-  onKeyDownButtonsAddOrRemove: PropTypes.func.isRequired,
-  notificationTag: PropTypes.object.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  notificationTag: PropTypes.shape({
+    isVisible: PropTypes.bool.isRequired,
+    message: PropTypes.string.isRequired,
+  }).isRequired,
+  suggestionTags: PropTypes.arrayOf(
+    PropTypes.shape({ name: PropTypes.string.isRequired })
+  ).isRequired,
 };

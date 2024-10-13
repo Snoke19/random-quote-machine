@@ -5,8 +5,8 @@ import "./QuoteBox.css";
 import Tags from "../Tags/Tags";
 import QuoteAuthor from "../QuoteAuthor/QuoteAuthor";
 import Notification from "../Notification/Notification";
-import SocialButton from "./Buttons/SocialButton";
-import GroupButtons from "./Buttons/GroupButtons";
+import SocialButton from "../Buttons/SocialButton";
+import GroupButtons from "../Buttons/GroupButtons";
 
 import useQuoteBox from "./hooks/useQuoteBox";
 import useQuoteClipboard from "./hooks/useQuoteClipboard";
@@ -63,7 +63,7 @@ export default function QuoteBox() {
         tagInputValue={tagState.tagInput}
         onRemoveTag={removeTag}
         onTagInputChange={handleTagInputChange}
-        onKeyDownButtonsAddOrRemove={handleKeyDown}
+        onKeyDown={handleKeyDown}
         notificationTag={tagNotification}
         suggestionTags={suggestedTags}
       />
