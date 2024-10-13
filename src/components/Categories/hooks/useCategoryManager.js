@@ -49,10 +49,6 @@ export default function useCategoryManager() {
     [categoryState.categories, displayCategoryNotification]
   );
 
-  const removeLastCategory = () => {
-    removeCategory(categoryState.categories.length - 1);
-  };
-
   const handleCategoryInputChange = useCallback(
     async (e) => {
       const inputValue = e.target.value;
@@ -76,21 +72,22 @@ export default function useCategoryManager() {
     [displayCategoryNotification]
   );
 
-  const removeCategory = useCallback((categoryIndex) => {
+  const removeLastCategory = () => {
     setCategoryState((prevState) => ({
       ...prevState,
-      categories: prevState.categories.filter(
-        (_, index) => index !== categoryIndex
+      categories: removeLastElement(
+        prevState.categories,
+        categoryState.categories.length - 1
       ),
     }));
-  }, []);
+  };
 
   return {
     categoryState,
     suggestedCategories,
     categoryNotification,
     handleCategoryInputChange,
-    removeCategory,
+    removeLastCategory,
     handleKeyDown,
   };
 }
@@ -104,4 +101,8 @@ const validateCategory = (value) => {
 
 const removeSlashes = (value) => {
   return [...value].filter((char) => char !== "/" && char !== "\\").join("");
+};
+
+const removeLastElement = (values, elementIndex) => {
+  return values.filter((_, index) => index !== elementIndex);
 };

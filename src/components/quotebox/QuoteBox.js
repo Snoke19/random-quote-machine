@@ -20,7 +20,7 @@ export default function QuoteBox() {
     suggestedCategories,
     categoryNotification,
     handleCategoryInputChange,
-    removeCategory,
+    removeLastCategory,
     handleKeyDown,
   } = useCategoryManager();
 
@@ -61,7 +61,7 @@ export default function QuoteBox() {
         categories={categoryState.categories}
         settings={quoteBoxSettings}
         categoryInputValue={categoryState.categoryInput}
-        onRemoveCategory={removeCategory}
+        onRemoveCategory={removeLastCategory}
         onCategoryInputChange={handleCategoryInputChange}
         onKeyDown={handleKeyDown}
         notificationCategory={categoryNotification}
