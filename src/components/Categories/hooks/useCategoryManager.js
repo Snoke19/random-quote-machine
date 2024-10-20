@@ -1,12 +1,20 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import fetchCategoriesByName from "../../../services/CategoryService";
 import useNotification from "../../Notification/hooks/useNotification";
+import {
+  getLocalCategories,
+  saveCategoriesLocally,
+  removeLastLocalCategory,
+  removeLocalCategory,
+} from "../../../utils/localStorageUtils";
 
 export default function useCategoryManager() {
   const [categoryState, setCategoryState] = useState({
-    categories: ["love"],
+    categories: [],
     categoryInput: "",
   });
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [isCategoriesReady, setIsCategoriesReady] = useState(false);
 
   const {
     notification: categoryNotification,
@@ -21,7 +29,7 @@ export default function useCategoryManager() {
     }
 
     if (e.key === "Backspace") {
-      removeLastCategory();
+      removeLastCategory(e);
     }
   };
 
@@ -39,10 +47,18 @@ export default function useCategoryManager() {
 
       if (!categoryState.categories.includes(inputValue)) {
         const sanitizedCategory = removeSlashes(inputValue);
-        setCategoryState((prevState) => ({
-          categories: [...prevState.categories, sanitizedCategory],
-          categoryInput: "",
-        }));
+        setCategoryState((prevState) => {
+          const updatedCategories = [
+            ...prevState.categories,
+            sanitizedCategory,
+          ];
+          saveCategoriesLocally(updatedCategories);
+          return {
+            categories: updatedCategories,
+            categoryInput: "",
+          };
+        });
+
         setSuggestedCategories([]);
       }
     },
@@ -72,18 +88,33 @@ export default function useCategoryManager() {
     [displayCategoryNotification]
   );
 
-  const removeLastCategory = () => {
-    setCategoryState((prevState) => ({
-      ...prevState,
-      categories: removeLastElement(
-        prevState.categories,
-        categoryState.categories.length - 1
-      ),
-    }));
+  const removeLastCategory = (e) => {
+    const inputValue = e.target?.value.trim();
+
+    if (!inputValue) {
+      if (!isNaN(e)) {
+        removeLocalCategory(e);
+        setUpdateTrigger((prevState) => !prevState);
+      } else {
+        removeLastLocalCategory();
+        setUpdateTrigger((prevState) => !prevState);
+      }
+    }
   };
+
+  useEffect(() => {
+    const localCategories = getLocalCategories();
+
+    setCategoryState((prev) => ({
+      ...prev,
+      categories: [...localCategories],
+    }));
+    setIsCategoriesReady(true);
+  }, [updateTrigger]);
 
   return {
     categoryState,
+    isCategoriesReady,
     suggestedCategories,
     categoryNotification,
     handleCategoryInputChange,
@@ -104,5 +135,5 @@ const removeSlashes = (value) => {
 };
 
 const removeLastElement = (values, elementIndex) => {
-  return values.filter((_, index) => index !== elementIndex);
+  values.splice(elementIndex, 1);
 };

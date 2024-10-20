@@ -17,6 +17,7 @@ export default function QuoteBox() {
 
   const {
     categoryState,
+    isCategoriesReady,
     suggestedCategories,
     categoryNotification,
     handleCategoryInputChange,
@@ -24,12 +25,23 @@ export default function QuoteBox() {
     handleKeyDown,
   } = useCategoryManager();
 
-  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(categoryState.categories);
+  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(
+    categoryState.categories,
+    isCategoriesReady
+  );
   const { clipboardNotification, copyToClipboard } = useQuoteClipboard(quote);
 
-  const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
-  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("")}`;
+  const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(
+    quote.quote
+  )}%22%20${encodeURIComponent(quote.author)}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+    "https://your-website.com"
+  )}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(
+    quote.author
+  )}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    ""
+  )}`;
 
   const socialButtons = [
     {

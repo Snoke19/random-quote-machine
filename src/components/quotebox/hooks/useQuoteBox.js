@@ -3,7 +3,7 @@ import colors from "../colors";
 import { getRandomColor } from "../../../utils/randomColor";
 import fetchRandomQuoteByCategories from "../../../services/QuoteService";
 
-export default function useQuoteBox(initDefaultCategories) {
+export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
   const [quote, setQuote] = useState({ quote: "", author: "" });
   const [quoteBoxSettings, setQuoteBoxSettings] = useState({
     colorBackGround: colors[0],
@@ -12,7 +12,10 @@ export default function useQuoteBox(initDefaultCategories) {
 
   const loadQuote = useCallback(
     async (categories = [initDefaultCategories]) => {
-      setQuoteBoxSettings((prevState) => ({ ...prevState, fade: true }));
+      setQuoteBoxSettings((prevState) => {
+        const newState = { ...prevState, fade: true };
+        return getNewStateIfDiff(prevState, newState);
+      });
 
       setTimeout(async () => {
         const newColor = getRandomColor();
@@ -27,11 +30,15 @@ export default function useQuoteBox(initDefaultCategories) {
             quote: quoteText,
             author: authorName,
           }));
-          setQuoteBoxSettings((prevState) => ({
-            ...prevState,
-            colorBackGround: newColor,
-            fade: false,
-          }));
+          setQuoteBoxSettings((prevState) => {
+            const newState = {
+              ...prevState,
+              colorBackGround: newColor,
+              fade: false,
+            };
+
+            return getNewStateIfDiff(prevState, newState);
+          });
         } catch (error) {
           const errorDetails = error.cause;
 
@@ -63,7 +70,10 @@ export default function useQuoteBox(initDefaultCategories) {
             }));
           }
 
-          setQuoteBoxSettings((prevState) => ({ ...prevState, fade: false }));
+          setQuoteBoxSettings((prevState) => {
+            const newState = { ...prevState, fade: false };
+            return getNewStateIfDiff(prevState, newState);
+          });
         }
       }, 500);
     },
@@ -79,12 +89,18 @@ export default function useQuoteBox(initDefaultCategories) {
   }, [quoteBoxSettings.colorBackGround]);
 
   useEffect(() => {
-    loadQuote();
-  }, [loadQuote]);
+    if (isCategoriesReady) loadQuote();
+  }, [isCategoriesReady, loadQuote]);
 
   return {
     quote,
     quoteBoxSettings,
     loadQuote,
   };
+}
+
+function getNewStateIfDiff(prevState, newState) {
+  if (JSON.stringify(prevState) === JSON.stringify(newState)) return prevState;
+
+  return newState;
 }
