@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /sonar-scanner
+.idea
 
 # testing
 /coverage
