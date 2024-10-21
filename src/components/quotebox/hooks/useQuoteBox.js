@@ -101,6 +101,5 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
 
 function getNewStateIfDiff(prevState, newState) {
   if (JSON.stringify(prevState) === JSON.stringify(newState)) return prevState;
-
   return newState;
 }
