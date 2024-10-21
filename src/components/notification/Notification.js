@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 
 import "./Notification.css";
 
-export default function Notification({ notificationInfo }) {
-  const { visible, message } = notificationInfo;
+export default function Notification({notificationInfo}) {
+  const {isVisible, message} = notificationInfo;
 
   return (
     <>
-      {visible && (
+      {isVisible && (
         <div className="toast">
           <p>{message}</p>
         </div>

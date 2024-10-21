@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 export default function useNotification() {
   const [notification, setNotification] = useState({
@@ -7,21 +7,17 @@ export default function useNotification() {
   });
 
   const displayNotification = (message) => {
-    setNotification((prevState) => ({ ...prevState, visible: true, message }));
+    setNotification({isVisible: true, message});
   };
 
   useEffect(() => {
     if (notification.isVisible) {
       const hideNotificationTimer = setTimeout(() => {
-        setNotification((prevState) => ({
-          ...prevState,
-          visible: false,
-          message: "",
-        }));
-      }, 3000);
+        setNotification({isVisible: false, message: ""});
+      }, 2000);
       return () => clearTimeout(hideNotificationTimer);
     }
   }, [notification.isVisible]);
 
-  return { notification, displayNotification };
+  return {notification, displayNotification};
 }
