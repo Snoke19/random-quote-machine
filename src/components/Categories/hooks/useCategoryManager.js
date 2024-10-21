@@ -133,7 +133,3 @@ const validateCategory = (value) => {
 const removeSlashes = (value) => {
   return [...value].filter((char) => char !== "/" && char !== "\\").join("");
 };
-
-const removeLastElement = (values, elementIndex) => {
-  values.splice(elementIndex, 1);
-};
