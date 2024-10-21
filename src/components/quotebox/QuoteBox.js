@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React, {useId} from "react";
 
 import "./QuoteBox.css";
 
@@ -16,7 +16,8 @@ export default function QuoteBox() {
   const idSocialButton = useId();
 
   const {
-    categoryState,
+    categories,
+    categoryInput,
     isCategoriesReady,
     suggestedCategories,
     categoryNotification,
@@ -25,23 +26,12 @@ export default function QuoteBox() {
     handleKeyDown,
   } = useCategoryManager();
 
-  const { quote, quoteBoxSettings, loadQuote } = useQuoteBox(
-    categoryState.categories,
-    isCategoriesReady
-  );
-  const { clipboardNotification, copyToClipboard } = useQuoteClipboard(quote);
+  const {quote, quoteBoxSettings, loadQuote} = useQuoteBox(categories, isCategoriesReady);
+  const {clipboardNotification, copyToClipboard} = useQuoteClipboard(quote);
 
-  const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(
-    quote.quote
-  )}%22%20${encodeURIComponent(quote.author)}`;
-  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-    "https://your-website.com"
-  )}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(
-    quote.author
-  )}`;
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    ""
-  )}`;
+  const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("")}`;
 
   const socialButtons = [
     {
@@ -70,9 +60,9 @@ export default function QuoteBox() {
         fadeClass={quoteBoxSettings.fade ? "fade-out" : "fade-in"}
       />
       <Categories
-        categories={categoryState.categories}
+        categories={categories}
         settings={quoteBoxSettings}
-        categoryInputValue={categoryState.categoryInput}
+        categoryInputValue={categoryInput}
         onRemoveCategory={removeLastCategory}
         onCategoryInputChange={handleCategoryInputChange}
         onKeyDown={handleKeyDown}
@@ -94,23 +84,23 @@ export default function QuoteBox() {
         <GroupButtons groupingClass="group-buttons">
           <button
             className="button clipboard-button"
-            style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
+            style={{backgroundColor: quoteBoxSettings.colorBackGround}}
             onClick={copyToClipboard}
             aria-label="Copy quote to clipboard"
           >
-            <img src="/images/icons8-copy-24.png" alt="Clipboard" />
+            <img src="/images/icons8-copy-24.png" alt="Clipboard"/>
           </button>
           <button
             className="button quote-button"
-            style={{ backgroundColor: quoteBoxSettings.colorBackGround }}
-            onClick={() => loadQuote(categoryState.categories)}
+            style={{backgroundColor: quoteBoxSettings.colorBackGround}}
+            onClick={() => loadQuote(categories)}
             aria-label="Load new quote"
           >
             New quote
           </button>
         </GroupButtons>
       </div>
-      <Notification notificationInfo={clipboardNotification} />
+      <Notification notificationInfo={clipboardNotification}/>
     </div>
   );
 }
