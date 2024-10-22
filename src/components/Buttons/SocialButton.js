@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export default function SocialButton({
   quoteUrl,
@@ -17,7 +18,7 @@ export default function SocialButton({
       href={quoteUrl}
       style={{ backgroundColor: colorBackGround }}
     >
-      <i className={iconClass}></i>
+      <FontAwesomeIcon icon={iconClass} />
     </a>
   );
 }

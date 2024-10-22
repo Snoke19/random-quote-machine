@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 98vh;
+}
+
+.search-container {
+    align-items: center;
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding: 0.75em 0;
+}
+
+.quote-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    box-sizing: border-box;
+}

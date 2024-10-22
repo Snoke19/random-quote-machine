@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin: 60px 0 40px 0;
+  margin: 35px 0 35px 0;
   border-radius: 5px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }

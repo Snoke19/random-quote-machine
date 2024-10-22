@@ -11,6 +11,12 @@ import GroupButtons from "../Buttons/GroupButtons";
 import useQuoteBox from "./hooks/useQuoteBox";
 import useQuoteClipboard from "./hooks/useQuoteClipboard";
 import useCategoryManager from "../Categories/hooks/useCategoryManager";
+import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
+import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
+import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
+import {faWandMagicSparkles} from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCopy} from "@fortawesome/free-regular-svg-icons";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
@@ -37,17 +43,17 @@ export default function QuoteBox() {
     {
       quoteUrl: tweetQuoteUrl,
       title: "Tweet this quote!",
-      iconClass: "fa fa-twitter",
+      iconClass: faTwitter,
     },
     {
       quoteUrl: linkedinShareUrl,
       title: "Post on LinkedIn!",
-      iconClass: "fa fa-linkedin",
+      iconClass: faLinkedin,
     },
     {
       quoteUrl: facebookShareUrl,
       title: "Post on Facebook!",
-      iconClass: "fa fa-facebook",
+      iconClass: faFacebook,
     },
   ];
 
@@ -88,7 +94,7 @@ export default function QuoteBox() {
             onClick={copyToClipboard}
             aria-label="Copy quote to clipboard"
           >
-            <img src="/images/icons8-copy-24.png" alt="Clipboard"/>
+            <FontAwesomeIcon icon={faCopy} size="xl" />
           </button>
           <button
             className="button quote-button"
@@ -96,7 +102,7 @@ export default function QuoteBox() {
             onClick={() => loadQuote(categories)}
             aria-label="Load new quote"
           >
-            New quote
+            <FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}} /> New quote
           </button>
         </GroupButtons>
       </div>

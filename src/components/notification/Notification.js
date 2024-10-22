@@ -10,7 +10,7 @@ export default function Notification({notificationInfo}) {
     <>
       {isVisible && (
         <div className="toast">
-          <p>{message}</p>
+          <span>{message}</span>
         </div>
       )}
     </>
