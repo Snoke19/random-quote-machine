@@ -1,28 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
+import {useCallback, useEffect, useState} from "react";
 import colors from "../colors";
-import { getRandomColor } from "../../../utils/randomColor";
+import {getRandomColor} from "../../../utils/randomColor";
 import fetchRandomQuoteByCategories from "../../../services/QuoteService";
 
 export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
-  const [quote, setQuote] = useState({ quote: "", author: "" });
+
+  const [quote, setQuote] = useState({quote: "", author: ""});
   const [quoteBoxSettings, setQuoteBoxSettings] = useState({
     colorBackGround: colors[0],
     fade: false,
   });
 
-  const loadQuote = useCallback(
-    async (categories = [initDefaultCategories]) => {
-      setQuoteBoxSettings((prevState) => {
-        const newState = { ...prevState, fade: true };
-        return getNewStateIfDiff(prevState, newState);
-      });
+  const loadQuote = useCallback(async (categories = [initDefaultCategories]) => {
+
+      setQuoteBoxSettings((prevState) =>
+        ({colorBackGround: prevState.colorBackGround, fade: true})
+      );
 
       setTimeout(async () => {
         const newColor = getRandomColor();
         try {
           const {
             quoteText,
-            author: { name: authorName },
+            author: {name: authorName},
           } = await fetchRandomQuoteByCategories(categories);
 
           setQuote((prevState) => ({
@@ -30,15 +30,7 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
             quote: quoteText,
             author: authorName,
           }));
-          setQuoteBoxSettings((prevState) => {
-            const newState = {
-              ...prevState,
-              colorBackGround: newColor,
-              fade: false,
-            };
-
-            return getNewStateIfDiff(prevState, newState);
-          });
+          setQuoteBoxSettings({colorBackGround: newColor, fade: false});
         } catch (error) {
           const errorDetails = error.cause;
 
@@ -70,10 +62,9 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
             }));
           }
 
-          setQuoteBoxSettings((prevState) => {
-            const newState = { ...prevState, fade: false };
-            return getNewStateIfDiff(prevState, newState);
-          });
+          setQuoteBoxSettings((prevState) =>
+            ({colorBackGround: prevState.colorBackGround, fade: false})
+          );
         }
       }, 500);
     },
@@ -89,7 +80,12 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
   }, [quoteBoxSettings.colorBackGround]);
 
   useEffect(() => {
-    if (isCategoriesReady) loadQuote();
+    if (isCategoriesReady) {
+      loadQuote()
+        .catch((error) => {
+          console.error('Error loading quote:', error);
+        });
+    }
   }, [isCategoriesReady, loadQuote]);
 
   return {
@@ -99,7 +95,3 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
   };
 }
 
-function getNewStateIfDiff(prevState, newState) {
-  if (JSON.stringify(prevState) === JSON.stringify(newState)) return prevState;
-  return newState;
-}
