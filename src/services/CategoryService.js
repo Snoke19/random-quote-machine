@@ -31,10 +31,10 @@ function handleError(error) {
 
     console.error("Error fetching categories: ", errorResponseInfo);
 
-    throw new Error(
-      `Failed to fetch categories: ${errorResponse.message || "Unknown error"}`,
-      { cause: errorResponseInfo }
-    );
+    const errorMessage = `Failed to fetch categories: ${errorResponse.message || "Unknown error"}`;
+    const errorToThrow = new Error(errorMessage);
+    errorToThrow.cause = errorResponseInfo;
+    throw errorToThrow;
   } else if (error.request) {
     if (error.message.includes("timeout")) {
       throw new Error("The request timed out. Please try again later.");
@@ -54,11 +54,14 @@ function handleError(error) {
 }
 
 const isCategoryName = (value) => {
-  if (value === null)
-    return { valid: false, message: "Cannot add null category value!" };
-  if (typeof str === "string" && value.length === 0)
-    return { valid: false, message: "Cannot add empty category value!" };
-  if (!isNaN(Number(value)))
-    return { valid: false, message: "Cannot add category with only numbers!" };
-  return { valid: true };
+  if (value === null) {
+    return {valid: false, message: "Cannot add null category value!"};
+  }
+  if (typeof value === "string" && value.length === 0) {
+    return {valid: false, message: "Cannot add empty category value!"};
+  }
+  if (!isNaN(Number(value))) {
+    return {valid: false, message: "Cannot add category with only numbers!"};
+  }
+  return {valid: true};
 };

@@ -30,10 +30,10 @@ function handleError(error) {
 
     console.error("Error fetching quote:", errorResponseInfo);
 
-    throw new Error(
-      `Failed to fetch quote: ${errorResponse.message || "Unknown error"}`,
-      { cause: errorResponseInfo }
-    );
+    const errorMessage = `Failed to fetch quote: ${errorResponse.message || "Unknown error"}`;
+    const errorToThrow = new Error(errorMessage);
+    errorToThrow.cause = errorResponseInfo;
+    throw errorToThrow;
   } else if (error.request) {
     if (error.message.includes("timeout")) {
       throw new Error("The request timed out. Please try again later.");
