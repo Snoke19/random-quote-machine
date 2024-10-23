@@ -1,36 +1,124 @@
+/* Search Input Wrapper */
 .search-wrapper {
     position: relative;
     width: 800px;
+    margin: 0 auto;
 }
 
-.search-container {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+/* Search Input */
+.search-input {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-.search-icon {
+.search-input:focus {
+    background-color: #fff;
+    box-shadow: 0 0 6px rgba(0, 150, 136, 0.4);
+    transition: box-shadow 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-icon-button {
     position: absolute;
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
-    pointer-events: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 20px;
+    transition: color 0.3s ease;
 }
 
-.search-input {
-    width: 100%;
-    padding: 10px 45px 10px 15px;
-    font-size: 16px;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    outline: none;
+/* Dropdown Style */
+.dropdown {
+    padding: 0;
+    color: black;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    right: 0;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 6px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+    z-index: 10;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-.search-input::placeholder {
+.dropdown-item {
+    border-bottom: 1px solid #ddd;
+    list-style-type: none;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #e0f7fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    transition: background-color 0.2s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Search Result - Quote Box */
+.search-quote-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+}
+
+.search-quote {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-family: "Lora", serif;
+}
+
+.search-author-text {
+    font-size: 14px;
     color: #999;
+}
+
+.search-categories {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.search-category-label {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+/* Button Quote Block */
+.button-quote-block {
+    all: unset;
+    display: block;
+    width: 100%;
+    cursor: pointer;
 }

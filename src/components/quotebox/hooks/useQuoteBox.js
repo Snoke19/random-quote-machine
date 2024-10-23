@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import colors from "../colors";
 import {getRandomColor} from "../../../utils/randomColor";
-import fetchRandomQuoteByCategories from "../../../services/QuoteService";
+import {fetchRandomQuoteByCategories} from "../../../services/QuoteService";
 
 export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
 
