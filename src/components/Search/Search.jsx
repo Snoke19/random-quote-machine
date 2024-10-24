@@ -8,6 +8,8 @@ import './Search.css';
 export function Search() {
 
   const searchContainerRef = useRef(null);
+  const debounceTimeoutRef = useRef(null);
+
   const quoteId = useId();
   const categoryId = useId();
 
@@ -27,9 +29,12 @@ export function Search() {
       const {value} = e.target;
       setInputSearch(value);
 
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
       if (value.length > 0) {
-        const debounceTimeout = setTimeout(() => fetchQuotes(value), 500);
-        return () => clearTimeout(debounceTimeout);
+        debounceTimeoutRef.current = setTimeout(() => fetchQuotes(value), 500);
       } else {
         setFilteredQuotes([]);
       }
@@ -77,7 +82,7 @@ export function Search() {
           value={inputSearch}
           onFocus={handleSearchInputFocus}
           onChange={handleSearchInputChange}
-          placeholder="Search..."
+          placeholder="Search quotes..."
         />
         <button className="search-icon-button" onClick={handleSearchIconClick}>
           <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>

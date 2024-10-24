@@ -3,7 +3,7 @@ import React, {useId} from "react";
 import "./QuoteBox.css";
 
 import Categories from "../Categories/Categories";
-import QuoteAndAuthor from "../QuoteAndAuthor/QuoteAndAuthor";
+import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
 import Notification from "../Notification/Notification";
 import SocialButton from "../Buttons/SocialButton";
 import GroupButtons from "../Buttons/GroupButtons";
@@ -23,16 +23,12 @@ export default function QuoteBox() {
 
   const {
     categories,
-    categoryInput,
-    isCategoriesReady,
-    suggestedCategories,
     categoryNotification,
-    handleCategoryInputChange,
-    removeLastCategory,
-    handleKeyDown,
+    removeLastCategoryOrByIndex,
+    addCategory,
   } = useCategoryManager();
 
-  const {quote, quoteBoxSettings, loadQuote} = useQuoteBox(categories, isCategoriesReady);
+  const {quote, quoteBoxSettings, loadQuote} = useQuoteBox(categories);
   const {clipboardNotification, copyToClipboard} = useQuoteClipboard(quote);
 
   const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
@@ -68,12 +64,9 @@ export default function QuoteBox() {
       <Categories
         categories={categories}
         settings={quoteBoxSettings}
-        categoryInputValue={categoryInput}
-        onRemoveCategory={removeLastCategory}
-        onCategoryInputChange={handleCategoryInputChange}
-        onKeyDown={handleKeyDown}
+        onRemoveCategory={removeLastCategoryOrByIndex}
+        addCategory={addCategory}
         notificationCategory={categoryNotification}
-        suggestionCategories={suggestedCategories}
       />
       <div className="buttons-container">
         <GroupButtons groupingClass="group-buttons group-buttons-wrap">

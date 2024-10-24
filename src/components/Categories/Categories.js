@@ -1,39 +1,77 @@
-import React, { memo, useEffect, useRef } from "react";
+import React, {memo, useCallback, useEffect, useId, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import Notification from "../Notification/Notification";
 import "./Categories.css";
+import fetchCategoriesByName from "../../services/CategoryService";
+import {removeSlashes} from "../../utils/strValidation";
+import useNotification from "../Notification/hooks/useNotification";
 
-const Category = memo(function Category({
-  category,
-  index,
-  onRemoveCategory,
-  backgroundColor,
-}) {
-  return (
-    <div className="category" style={{ backgroundColor }}>
-      <span>{category}</span>
-      <button
-        className="remove-category"
-        onClick={() => onRemoveCategory(index)}
-        aria-label={`Remove category ${category}`}
-      >
-        &times;
-      </button>
-    </div>
-  );
-});
+const ENTER_KEY = "Enter";
+const BACKSPACE_KEY = "Backspace";
+
+const Category = memo(
+  function Category({category, index, onRemoveCategory, backgroundColor}) {
+    return (
+      <div className="category" style={{backgroundColor}}>
+        <span>{category}</span>
+        <button
+          className="remove-category"
+          onClick={() => onRemoveCategory(index)}
+          aria-label={`Remove category ${category}`}
+        >
+          &times;
+        </button>
+      </div>
+    );
+  }
+);
 
 export default function Categories({
-  categories,
-  settings: { colorBackGround },
-  categoryInputValue,
-  onRemoveCategory,
-  onCategoryInputChange,
-  onKeyDown,
-  notificationCategory,
-  suggestionCategories,
-}) {
+                                     categories,
+                                     settings: {colorBackGround},
+                                     onRemoveCategory,
+                                     addCategory,
+                                     notificationCategory
+                                   }) {
   const inputRef = useRef(null);
+  const categoryId = useId();
+  const suggestedCategoryId = useId();
+
+  const {
+    notification: inputCategoryNotification,
+    displayNotification: displayInputCategoryNotification,
+  } = useNotification();
+
+  const [categoryInput, setCategoryInput] = useState("");
+  const [suggestedCategories, setSuggestedCategories] = useState([]);
+
+  const handleCategoryInputChange = useCallback(
+    async (e) => {
+      const inputValue = e.target.value;
+      setCategoryInput(inputValue);
+
+      if (inputValue.trim().length >= 1) {
+        try {
+          const sanitizedInput = removeSlashes(inputValue);
+          const categorySuggestions = await fetchCategoriesByName(sanitizedInput);
+          setSuggestedCategories(categorySuggestions);
+        } catch (error) {
+          displayInputCategoryNotification(error.message);
+        }
+      } else {
+        setSuggestedCategories([]);
+      }
+    }, [displayInputCategoryNotification]);
+
+  const onKeyDown = useCallback((e) => {
+    if (e.key === ENTER_KEY && categoryInput.trim()) {
+      addCategory(categoryInput);
+      setCategoryInput("");
+      setSuggestedCategories([]);
+    } else if (e.key === BACKSPACE_KEY && categoryInput === "") {
+      onRemoveCategory(e);
+    }
+  }, [categoryInput, addCategory, onRemoveCategory]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -44,7 +82,7 @@ export default function Categories({
       <div className="categories-input-container">
         {categories.map((category, index) => (
           <Category
-            key={`${category}-${index}`}
+            key={`${categoryId}-${index}`}
             category={category}
             index={index}
             onRemoveCategory={onRemoveCategory}
@@ -58,19 +96,24 @@ export default function Categories({
           autoComplete="off"
           type="text"
           ref={inputRef}
-          value={categoryInputValue}
-          onChange={onCategoryInputChange}
+          value={categoryInput}
+          onChange={handleCategoryInputChange}
           onKeyDown={onKeyDown}
           placeholder="Enter category"
           className="categories-input"
         />
         <datalist id="suggestedCategories">
-          {suggestionCategories.map((item, key) => (
-            <option key={`${item}-${key}`} value={item.name} />
-          ))}
+          {suggestedCategories.map((item) => {
+            return (
+              <option key={`${item.name}-${suggestedCategoryId}`} value={item.name}/>
+            );
+          })}
         </datalist>
       </div>
-      <Notification notificationInfo={notificationCategory} />
+      {notificationCategory?.isVisible && <Notification notificationInfo={notificationCategory} />}
+      {inputCategoryNotification?.isVisible && (
+        <Notification notificationInfo={inputCategoryNotification} />
+      )}
     </>
   );
 }
@@ -87,15 +130,10 @@ Categories.propTypes = {
   settings: PropTypes.shape({
     colorBackGround: PropTypes.string.isRequired,
   }).isRequired,
-  categoryInputValue: PropTypes.string.isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
-  onCategoryInputChange: PropTypes.func.isRequired,
-  onKeyDown: PropTypes.func.isRequired,
+  addCategory: PropTypes.func.isRequired,
   notificationCategory: PropTypes.shape({
     isVisible: PropTypes.bool.isRequired,
     message: PropTypes.string.isRequired,
-  }).isRequired,
-  suggestionCategories: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string.isRequired })
-  ).isRequired,
+  }).isRequired
 };

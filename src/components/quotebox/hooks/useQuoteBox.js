@@ -3,7 +3,7 @@ import colors from "../colors";
 import {getRandomColor} from "../../../utils/randomColor";
 import {fetchRandomQuoteByCategories} from "../../../services/QuoteService";
 
-export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
+export default function useQuoteBox(initDefaultCategories) {
 
   const [quote, setQuote] = useState({quote: "", author: ""});
   const [quoteBoxSettings, setQuoteBoxSettings] = useState({
@@ -80,13 +80,13 @@ export default function useQuoteBox(initDefaultCategories, isCategoriesReady) {
   }, [quoteBoxSettings.colorBackGround]);
 
   useEffect(() => {
-    if (isCategoriesReady) {
+    if (initDefaultCategories.length) {
       loadQuote()
         .catch((error) => {
           console.error('Error loading quote:', error);
         });
     }
-  }, [isCategoriesReady, loadQuote]);
+  }, [initDefaultCategories, loadQuote]);
 
   return {
     quote,

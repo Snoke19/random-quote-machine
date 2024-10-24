@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useState} from "react";
-import fetchCategoriesByName from "../../../services/CategoryService";
 import useNotification from "../../Notification/hooks/useNotification";
 import {
   getLocalCategories,
@@ -7,17 +6,10 @@ import {
   removeLocalCategory,
   saveCategoriesLocally,
 } from "../../../utils/localStorageUtils";
-
-const ENTER_KEY = "Enter";
-const BACKSPACE_KEY = "Backspace";
+import {removeSlashes} from "../../../utils/strValidation";
 
 export default function useCategoryManager() {
-
-  const [categories, setCategories] = useState([]);
-  const [categoryInput, setCategoryInput] = useState("");
-  const [isCategoriesReady, setIsCategoriesReady] = useState(false);
-  const [suggestedCategories, setSuggestedCategories] = useState([]);
-
+  const [categories, setCategories] = useState(() => getLocalCategories());
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
   const {
@@ -25,89 +17,52 @@ export default function useCategoryManager() {
     displayNotification: displayCategoryNotification,
   } = useNotification();
 
-  const handleKeyDown = (e) => {
-    if (e.key === ENTER_KEY) {
-      addCategory();
-    } else if (e.key === BACKSPACE_KEY) {
-      removeLastCategory(e);
-    }
-  };
+  const addCategory = useCallback(
+    (categoryInput) => {
+      const inputValue = categoryInput.trim();
+      const {isValid, message} = validateCategory(inputValue);
 
-  const addCategory = useCallback(() => {
-
-    const inputValue = categoryInput.trim();
-    const validation = validateCategory(inputValue);
-
-    if (!validation.isValid) {
-      displayCategoryNotification(validation.message);
-      return;
-    }
-
-    if (!categories.includes(inputValue)) {
-      const sanitizedCategory = removeSlashes(inputValue);
-      const updatedCategories = [...categories, sanitizedCategory];
-
-      setCategories(updatedCategories);
-      saveCategoriesLocally(updatedCategories);
-      setCategoryInput("");
-      setSuggestedCategories([]);
-    }
-  }, [categoryInput, categories, displayCategoryNotification]);
-
-  const handleCategoryInputChange = useCallback(async (e) => {
-    const inputValue = e.target.value;
-    setCategoryInput(inputValue);
-
-    if (inputValue.length >= 1) {
-      try {
-        const sanitizedInput = removeSlashes(inputValue);
-        const categorySuggestions = await fetchCategoriesByName(sanitizedInput);
-        setSuggestedCategories(categorySuggestions);
-      } catch (error) {
-        displayCategoryNotification(error.message);
+      if (!isValid) {
+        displayCategoryNotification(message);
+        return;
       }
-    }
-  }, [displayCategoryNotification]);
 
-  const removeLastCategory = (e) => {
-    const inputValue = e.target?.value.trim();
+      if (!categories.includes(inputValue)) {
+        const sanitizedCategory = removeSlashes(inputValue);
+        const updatedCategories = [...categories, sanitizedCategory];
 
-    if (!inputValue) {
-      if (!isNaN(e)) {
-        const index = parseInt(e);
-        removeLocalCategory(index);
-      } else {
-        removeLastLocalCategory();
+        setCategories(updatedCategories);
+        saveCategoriesLocally(updatedCategories);
       }
-      setUpdateTrigger((prevState) => !prevState);
+    }, [categories, displayCategoryNotification]);
+
+  const removeLastCategoryOrByIndex = useCallback((e) => {
+    const inputValue = e?.target?.value?.trim();
+
+    if (!inputValue && !isNaN(e)) {
+      const index = parseInt(e);
+      removeLocalCategory(index);
+    } else {
+      removeLastLocalCategory();
     }
-  };
+    setUpdateTrigger((prevState) => !prevState);
+  }, []);
 
   useEffect(() => {
     const localCategories = getLocalCategories();
     setCategories(localCategories);
-    setIsCategoriesReady(true);
   }, [updateTrigger]);
 
   return {
     categories,
-    categoryInput,
-    isCategoriesReady,
-    suggestedCategories,
     categoryNotification,
-    handleCategoryInputChange,
-    removeLastCategory,
-    handleKeyDown,
+    removeLastCategoryOrByIndex,
+    addCategory,
   };
 }
 
 const validateCategory = (value) => {
   if (!value) return {isValid: false, message: "Category cannot be empty!"};
-  if (!isNaN(Number(value)))
-    return {isValid: false, message: "Category cannot be numeric only!"};
+  if (!isNaN(Number(value))) return {isValid: false, message: "Category cannot be numeric only!"};
   return {isValid: true};
-};
-
-const removeSlashes = (value) => {
-  return value.replace(/[\\/]/g, "");
 };

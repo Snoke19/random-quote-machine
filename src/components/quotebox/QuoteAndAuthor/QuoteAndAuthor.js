@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import "./QuoteAndAuthor.css";
 
+const DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED = "Please add categories for getting random quote!"
+
 export default function QuoteAndAuthor({quote, author, color, fadeClass}) {
   return (
     <div
@@ -14,7 +16,7 @@ export default function QuoteAndAuthor({quote, author, color, fadeClass}) {
     >
       <div className={`quote-text ${fadeClass}`} style={{color}}>
         <i className="fa fa-quote-left"></i>
-        <span id="text">{quote}</span>
+        <span id="text">{quote || DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED}</span>
       </div>
       <div className={`quote-author ${fadeClass}`} style={{color}}>
         {author && <span id="author">- {author}</span>}

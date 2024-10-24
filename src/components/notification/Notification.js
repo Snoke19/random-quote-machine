@@ -5,7 +5,6 @@ import "./Notification.css";
 
 export default function Notification({notificationInfo}) {
   const {isVisible, message} = notificationInfo;
-
   return (
     <>
       {isVisible && (
