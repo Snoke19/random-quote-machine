@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
-import './Search.css';
-import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {fetchQuotesByTextQuote} from "../../services/QuoteService";
+import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
+import './Search.css';
 
 export function Search() {
 

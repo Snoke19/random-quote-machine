@@ -27,5 +27,5 @@ SocialButton.propTypes = {
   quoteUrl: PropTypes.string.isRequired,
   colorBackGround: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  iconClass: PropTypes.string.isRequired,
+  iconClass: PropTypes.object.isRequired,
 };
