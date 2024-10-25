@@ -1,4 +1,4 @@
-import React, {useId} from "react";
+import React, {useEffect, useId} from "react";
 
 import "./QuoteBox.css";
 
@@ -17,6 +17,7 @@ import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
 import {faWandMagicSparkles} from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCopy} from "@fortawesome/free-regular-svg-icons";
+import {useBackgroundColorContext} from "../context/BackgroundColorContext";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
@@ -30,6 +31,11 @@ export default function QuoteBox() {
 
   const {quote, quoteBoxSettings, loadQuote} = useQuoteBox(categories);
   const {clipboardNotification, copyToClipboard} = useQuoteClipboard(quote);
+  const { updateBackgroundColor } = useBackgroundColorContext();
+
+  useEffect(() => {
+    updateBackgroundColor(quoteBoxSettings.colorBackGround);
+  }, [quoteBoxSettings.colorBackGround, updateBackgroundColor]);
 
   const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
