@@ -4,7 +4,7 @@ import {fetchQuotesByTextQuote} from "../../services/QuoteService";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import './Search.css';
-import {useBackgroundColorContext} from "../context/BackgroundColorContext";
+import {useStyleThemeContext} from "../context/BackgroundColorContext";
 
 export function Search() {
 
@@ -14,7 +14,8 @@ export function Search() {
   const quoteId = useId();
   const categoryId = useId();
 
-  const { backgroundColor } = useBackgroundColorContext();
+  const { styleTheme } = useStyleThemeContext();
+
   const [inputSearch, setInputSearch] = useState('');
   const [filteredQuotes, setFilteredQuotes] = useState([]);
 
@@ -59,9 +60,14 @@ export function Search() {
     setFilteredQuotes([]);
   }, []);
 
-  const handleSearchIconClick = () => {
-    setInputSearch('');
-    setFilteredQuotes([]);
+  const handleSearchIconClick = async () => {
+
+    if (filteredQuotes.length > 0) {
+      setInputSearch('');
+      setFilteredQuotes([]);
+    } else if (inputSearch.length > 0) {
+      await fetchQuotes(inputSearch);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +108,7 @@ export function Search() {
                     </div>
                     <div className="search-categories">
                       {categories.map(({id, name}) => (
-                        <span className="search-category-label" key={categoryId + id} style={{backgroundColor: backgroundColor}}>
+                        <span className="search-category-label" key={categoryId + id} style={{backgroundColor: styleTheme}}>
                           {name}
                         </span>
                       ))}

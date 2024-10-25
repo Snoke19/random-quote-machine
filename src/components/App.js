@@ -1,14 +1,14 @@
 import {Search} from "./Search/Search";
 import QuoteBox from "./QuoteBox/QuoteBox";
 import Footer from "./Footer/Footer";
-import {BackgroundColorProvider} from "./context/BackgroundColorContext";
+import {StyleThemeProvider} from "./context/BackgroundColorContext";
 
 import React from "react";
 import './App.css';
 
 export default function App() {
   return (
-    <BackgroundColorProvider>
+    <StyleThemeProvider>
       <div className="container">
         <Search/>
         <div className="quote-container">
@@ -16,6 +16,6 @@ export default function App() {
           <Footer/>
         </div>
       </div>
-    </BackgroundColorProvider>
+    </StyleThemeProvider>
   )
 }

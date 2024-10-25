@@ -1,12 +1,12 @@
 import {useCallback, useEffect, useState} from "react";
-import useNotification from "../../Notification/hooks/useNotification";
+import useNotification from "./useNotification";
 import {
   getLocalCategories,
   removeLastLocalCategory,
   removeLocalCategory,
   saveCategoriesLocally,
-} from "../../../utils/localStorageUtils";
-import {removeSlashes} from "../../../utils/strValidation";
+} from "../../utils/localStorageUtils";
+import {removeSlashes} from "../../utils/strValidation";
 
 export default function useCategoryManager() {
   const [categories, setCategories] = useState(() => getLocalCategories());

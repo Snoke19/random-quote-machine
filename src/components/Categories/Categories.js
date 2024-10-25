@@ -4,15 +4,15 @@ import Notification from "../Notification/Notification";
 import "./Categories.css";
 import fetchCategoriesByName from "../../services/CategoryService";
 import {removeSlashes} from "../../utils/strValidation";
-import useNotification from "../Notification/hooks/useNotification";
+import useNotification from "../hooks/useNotification";
 
 const ENTER_KEY = "Enter";
 const BACKSPACE_KEY = "Backspace";
 
 const Category = memo(
-  function Category({category, index, onRemoveCategory, backgroundColor}) {
+  function Category({category, index, onRemoveCategory, styleTheme}) {
     return (
-      <div className="category" style={{backgroundColor}}>
+      <div className="category" style={{backgroundColor: styleTheme.color}}>
         <span>{category}</span>
         <button
           className="remove-category"
@@ -28,7 +28,7 @@ const Category = memo(
 
 export default function Categories({
                                      categories,
-                                     settings: {colorBackGround},
+                                     styleTheme,
                                      onRemoveCategory,
                                      addCategory,
                                      notificationCategory
@@ -86,7 +86,7 @@ export default function Categories({
             category={category}
             index={index}
             onRemoveCategory={onRemoveCategory}
-            backgroundColor={colorBackGround}
+            styleTheme={styleTheme}
           />
         ))}
         <input
@@ -122,14 +122,12 @@ Category.propTypes = {
   category: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
+  styleTheme: PropTypes.object.isRequired,
 };
 
 Categories.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  settings: PropTypes.shape({
-    colorBackGround: PropTypes.string.isRequired,
-  }).isRequired,
+  styleTheme: PropTypes.object.isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
   addCategory: PropTypes.func.isRequired,
   notificationCategory: PropTypes.shape({

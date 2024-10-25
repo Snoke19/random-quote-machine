@@ -1,4 +1,4 @@
-import useNotification from "../../Notification/hooks/useNotification";
+import useNotification from "./useNotification";
 
 export default function useQuoteClipboard(quote) {
   const {

@@ -1,29 +1,32 @@
 import React, {createContext, useCallback, useContext, useMemo, useState} from 'react';
 import PropTypes from "prop-types";
 
-const BackgroundColorContext = createContext(null);
+const StyleThemeContext = createContext(null);
 
-export function BackgroundColorProvider({children}) {
+export function StyleThemeProvider({children}) {
 
-  const [backgroundColor, setBackgroundColor] = useState('');
-  const updateBackgroundColor = useCallback((color) => {
-    setBackgroundColor(color);
+  const [styleTheme, setStyleTheme] = useState('');
+
+  const updateStyleThemeContext = useCallback((color) => {
+    setStyleTheme(color);
+    document.body.style.backgroundColor = color;
+    document.body.style.transition = "background-color 1s ease";
   }, []);
 
   const contextValue = useMemo(() => ({
-    backgroundColor,
-    updateBackgroundColor
-  }), [backgroundColor, updateBackgroundColor]);
+    styleTheme,
+    updateStyleThemeContext
+  }), [styleTheme, updateStyleThemeContext]);
 
   return (
-    <BackgroundColorContext.Provider value={contextValue}>
+    <StyleThemeContext.Provider value={contextValue}>
       {children}
-    </BackgroundColorContext.Provider>
+    </StyleThemeContext.Provider>
   );
 }
 
-export const useBackgroundColorContext = () => useContext(BackgroundColorContext);
+export const useStyleThemeContext = () => useContext(StyleThemeContext);
 
-BackgroundColorProvider.propTypes = {
+StyleThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
