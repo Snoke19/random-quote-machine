@@ -5,7 +5,9 @@ import "./QuoteAndAuthor.css";
 
 const DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED = "Please add categories for getting random quote!"
 
-export default function QuoteAndAuthor({quote, author, color, fadeClass}) {
+export default function QuoteAndAuthor({quote, styleTheme}) {
+  const {color, fade} = styleTheme;
+
   return (
     <div
       style={{
@@ -14,20 +16,18 @@ export default function QuoteAndAuthor({quote, author, color, fadeClass}) {
         borderRadius: "20px",
       }}
     >
-      <div className={`quote-text ${fadeClass}`} style={{color}}>
+      <div className={`quote-text ${fade ? "fade-out" : "fade-in"}`} style={{color: color}}>
         <i className="fa fa-quote-left"></i>
-        <span id="text">{quote || DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED}</span>
+        <span id="text">{quote.quote || DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED}</span>
       </div>
-      <div className={`quote-author ${fadeClass}`} style={{color}}>
-        {author && <span id="author">- {author}</span>}
+      <div className={`quote-author ${fade ? "fade-out" : "fade-in"}`} style={{color: color}}>
+        {quote.author && <span id="author">- {quote.author}</span>}
       </div>
     </div>
   );
 }
 
 QuoteAndAuthor.propTypes = {
-  quote: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  fadeClass: PropTypes.string.isRequired,
+  quote: PropTypes.object.isRequired,
+  styleTheme: PropTypes.object.isRequired
 };

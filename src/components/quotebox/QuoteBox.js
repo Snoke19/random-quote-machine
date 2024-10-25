@@ -31,7 +31,7 @@ export default function QuoteBox() {
 
   const {quote, quoteBoxSettings, loadQuote} = useQuoteBox(categories);
   const {clipboardNotification, copyToClipboard} = useQuoteClipboard(quote);
-  const { updateBackgroundColor } = useBackgroundColorContext();
+  const {updateBackgroundColor} = useBackgroundColorContext();
 
   useEffect(() => {
     updateBackgroundColor(quoteBoxSettings.colorBackGround);
@@ -61,12 +61,7 @@ export default function QuoteBox() {
 
   return (
     <div className="quote-box">
-      <QuoteAndAuthor
-        quote={quote.quote}
-        author={quote.author}
-        color={quoteBoxSettings.colorBackGround}
-        fadeClass={quoteBoxSettings.fade ? "fade-out" : "fade-in"}
-      />
+      <QuoteAndAuthor quote={quote} styleTheme={quoteBoxSettings}/>
       <Categories
         categories={categories}
         settings={quoteBoxSettings}
@@ -93,7 +88,7 @@ export default function QuoteBox() {
             onClick={copyToClipboard}
             aria-label="Copy quote to clipboard"
           >
-            <FontAwesomeIcon icon={faCopy} size="xl" />
+            <FontAwesomeIcon icon={faCopy} size="xl"/>
           </button>
           <button
             className="button quote-button"
@@ -101,7 +96,7 @@ export default function QuoteBox() {
             onClick={() => loadQuote(categories)}
             aria-label="Load new quote"
           >
-            <FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}} /> New quote
+            <FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}}/> New quote
           </button>
         </GroupButtons>
       </div>
