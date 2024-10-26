@@ -4,11 +4,10 @@ import "./QuoteBox.css";
 
 import Categories from "../Categories/Categories";
 import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
-import Notification from "../Notification/Notification";
 import SocialButton from "../Buttons/SocialButton";
 import GroupButtons from "../Buttons/GroupButtons";
 
-import useQuoteClipboard from "../hooks/useQuoteClipboard";
+import {useCopyToClipboard} from "../hooks/useCopyToClipboard";
 import useCategoryManager from "../hooks/useCategoryManager";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
 import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
@@ -33,7 +32,7 @@ export default function QuoteBox() {
 
   const {styleTheme, updateStyleTheme} = useStyleTheme();
   const {quote, loadQuote} = useQuote(categories);
-  const {clipboardNotification, copyToClipboard} = useQuoteClipboard(quote);
+  const [copiedText, copyToClipboard] = useCopyToClipboard();
   const {updateStyleThemeContext} = useStyleThemeContext();
 
   const loadQuoteWithStyle = useCallback(() => {
@@ -94,7 +93,9 @@ export default function QuoteBox() {
           <button
             className="button clipboard-button"
             style={{backgroundColor: styleTheme.color}}
-            onClick={copyToClipboard}
+            onClick={() => {
+              copyToClipboard(`${quote.quote} - ${quote.author}`);
+            }}
             aria-label="Copy quote to clipboard"
           >
             <FontAwesomeIcon icon={faCopy} size="xl"/>
@@ -109,7 +110,7 @@ export default function QuoteBox() {
           </button>
         </GroupButtons>
       </div>
-      <Notification notificationInfo={clipboardNotification}/>
+      {/*<Notification notificationInfo={clipboardNotification}/>*/}
     </div>
   );
 }
