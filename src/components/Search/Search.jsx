@@ -4,7 +4,7 @@ import {fetchQuotesByTextQuote} from "../../services/QuoteService";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import './Search.css';
-import {useStyleThemeContext} from "../context/BackgroundColorContext";
+import {useStyleThemeContext} from "../context/StyleThemeContext";
 
 export function Search() {
 

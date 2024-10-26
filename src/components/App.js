@@ -1,7 +1,7 @@
 import {Search} from "./Search/Search";
 import QuoteBox from "./QuoteBox/QuoteBox";
 import Footer from "./Footer/Footer";
-import {StyleThemeProvider} from "./context/BackgroundColorContext";
+import {StyleThemeProvider} from "./context/StyleThemeContext";
 
 import React from "react";
 import './App.css';

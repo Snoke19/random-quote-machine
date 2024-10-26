@@ -15,7 +15,7 @@ import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
 import {faWandMagicSparkles} from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCopy} from "@fortawesome/free-regular-svg-icons";
-import {useStyleThemeContext} from "../context/BackgroundColorContext";
+import {useStyleThemeContext} from "../context/StyleThemeContext";
 import {getRandomColor} from "../../utils/randomColor";
 import useStyleTheme from "../hooks/useStyleTheme";
 import useQuote from "../hooks/useQuote";
