@@ -8,7 +8,7 @@ import SocialButton from "../Buttons/SocialButton";
 import GroupButtons from "../Buttons/GroupButtons";
 
 import {useCopyToClipboard} from "../hooks/useCopyToClipboard";
-import useCategoryManager from "../hooks/useCategoryManager";
+import useCategory from "../hooks/useCategory";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
 import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
 import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
@@ -28,7 +28,7 @@ export default function QuoteBox() {
     categories,
     removeLastCategoryOrByIndex,
     addCategory,
-  } = useCategoryManager();
+  } = useCategory();
 
   const {displayNotification} = useNotificationContext();
   const {styleTheme, updateStyleTheme} = useStyleTheme();

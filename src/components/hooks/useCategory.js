@@ -7,7 +7,7 @@ import {
 } from "../../utils/localStorageUtils";
 import {removeSlashes} from "../../utils/strValidation";
 
-export default function useCategoryManager() {
+export default function useCategory() {
   const [categories, setCategories] = useState(() => getLocalCategories());
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
