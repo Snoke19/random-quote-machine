@@ -1,4 +1,4 @@
-import colors from "../components/QuoteBox/colors";
+import colors from "./colors";
 
 export const getRandomColor = () => {
   const randomArray = new Uint32Array(1);

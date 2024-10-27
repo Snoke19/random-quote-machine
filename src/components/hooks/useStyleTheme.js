@@ -1,5 +1,5 @@
 import {useMemo, useState} from "react";
-import colors from "../QuoteBox/colors";
+import colors from "../../utils/colors";
 
 export default function useStyleTheme(theme) {
   const [color, setColor] = useState(colors[0]);
