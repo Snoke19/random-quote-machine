@@ -1,20 +1,24 @@
-import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
+import React, {useCallback, useId, useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {fetchQuotesByTextQuote} from "../../services/QuoteService";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import './Search.css';
 import {useStyleThemeContext} from "../context/StyleThemeContext";
+import {useClickAway} from "../hooks/useClickAway";
 
 export function Search() {
 
-  const searchContainerRef = useRef(null);
+  const ref = useClickAway(() => {
+    setFilteredQuotes([]);
+  });
+
   const debounceTimeoutRef = useRef(null);
 
   const quoteId = useId();
   const categoryId = useId();
 
-  const { styleTheme } = useStyleThemeContext();
+  const {styleTheme} = useStyleThemeContext();
 
   const [inputSearch, setInputSearch] = useState('');
   const [filteredQuotes, setFilteredQuotes] = useState([]);
@@ -70,19 +74,10 @@ export function Search() {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-        setFilteredQuotes([]);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  console.log("Search rendering!")
 
   return (
-    <div className="search-container" ref={searchContainerRef}>
+    <div className="search-container" ref={ref}>
       <div className="search-wrapper">
         <input
           className="search-input"
@@ -108,7 +103,8 @@ export function Search() {
                     </div>
                     <div className="search-categories">
                       {categories.map(({id, name}) => (
-                        <span className="search-category-label" key={categoryId + id} style={{backgroundColor: styleTheme}}>
+                        <span className="search-category-label" key={categoryId + id}
+                              style={{backgroundColor: styleTheme}}>
                           {name}
                         </span>
                       ))}
