@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useState} from "react";
-import useNotification from "./useNotification";
 import {
   getLocalCategories,
   removeLastLocalCategory,
@@ -12,19 +11,13 @@ export default function useCategoryManager() {
   const [categories, setCategories] = useState(() => getLocalCategories());
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
-  const {
-    notification: categoryNotification,
-    displayNotification: displayCategoryNotification,
-  } = useNotification();
-
   const addCategory = useCallback(
     (categoryInput) => {
       const inputValue = categoryInput.trim();
       const {isValid, message} = validateCategory(inputValue);
 
       if (!isValid) {
-        displayCategoryNotification(message);
-        return;
+        throw Error(message);
       }
 
       if (!categories.includes(inputValue)) {
@@ -34,7 +27,7 @@ export default function useCategoryManager() {
         setCategories(updatedCategories);
         saveCategoriesLocally(updatedCategories);
       }
-    }, [categories, displayCategoryNotification]);
+    }, [categories]);
 
   const removeLastCategoryOrByIndex = useCallback((e) => {
     const inputValue = e?.target?.value?.trim();
@@ -55,7 +48,6 @@ export default function useCategoryManager() {
 
   return {
     categories,
-    categoryNotification,
     removeLastCategoryOrByIndex,
     addCategory,
   };

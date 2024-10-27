@@ -17,7 +17,7 @@ export function StyleThemeProvider({children}) {
     styleTheme,
     updateStyleThemeContext
   }), [styleTheme, updateStyleThemeContext]);
-
+  console.log("Rendering StyleThemeProvider");
   return (
     <StyleThemeContext.Provider value={contextValue}>
       {children}

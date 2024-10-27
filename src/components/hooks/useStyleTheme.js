@@ -12,7 +12,7 @@ export default function useStyleTheme(theme) {
     setTimeout(() => {
       setColor(newColor);
       setFade(false);
-    }, shouldFade ? 500 : 0);
+    }, 500);
   };
 
   return {styleTheme, updateStyleTheme};

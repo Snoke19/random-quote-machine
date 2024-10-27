@@ -24,7 +24,7 @@ export function useCopyToClipboard() {
       }
     };
 
-    handleCopy();
+    return handleCopy();
   }, []);
 
   return [state, copyToClipboard];

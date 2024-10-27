@@ -19,17 +19,18 @@ import {useStyleThemeContext} from "../context/StyleThemeContext";
 import {getRandomColor} from "../../utils/randomColor";
 import useStyleTheme from "../hooks/useStyleTheme";
 import useQuote from "../hooks/useQuote";
+import {useNotificationContext} from "../context/NotificationContext";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
 
   const {
     categories,
-    categoryNotification,
     removeLastCategoryOrByIndex,
     addCategory,
   } = useCategoryManager();
 
+  const {displayNotification} = useNotificationContext();
   const {styleTheme, updateStyleTheme} = useStyleTheme();
   const {quote, loadQuote} = useQuote(categories);
   const [copiedText, copyToClipboard] = useCopyToClipboard();
@@ -75,7 +76,6 @@ export default function QuoteBox() {
         styleTheme={styleTheme}
         onRemoveCategory={removeLastCategoryOrByIndex}
         addCategory={addCategory}
-        notificationCategory={categoryNotification}
       />
       <div className="buttons-container">
         <GroupButtons groupingClass="group-buttons group-buttons-wrap">
@@ -94,7 +94,13 @@ export default function QuoteBox() {
             className="button clipboard-button"
             style={{backgroundColor: styleTheme.color}}
             onClick={() => {
-              copyToClipboard(`${quote.quote} - ${quote.author}`);
+              const copiedQuote = `${quote.quote} - ${quote.author}`;
+              copyToClipboard(copiedQuote).then(() => {
+                displayNotification(`The quote "${copiedQuote.substring(0, 20)}..." has been copied!`);
+              }).catch((e) => {
+                displayNotification('Cannot copy the quote!');
+                console.error(e);
+              })
             }}
             aria-label="Copy quote to clipboard"
           >
@@ -110,7 +116,6 @@ export default function QuoteBox() {
           </button>
         </GroupButtons>
       </div>
-      {/*<Notification notificationInfo={clipboardNotification}/>*/}
     </div>
   );
 }
