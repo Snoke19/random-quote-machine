@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useMemo} from "react";
 import PropTypes from "prop-types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
@@ -8,6 +8,9 @@ const SocialButton = memo(function SocialButton({
                                                   title,
                                                   iconClass,
                                                 }) {
+
+  const fontAwesomeIcon = useMemo(() => <FontAwesomeIcon icon={iconClass}/>, [iconClass]);
+
   return (
     <a
       className="button social-button"
@@ -18,7 +21,7 @@ const SocialButton = memo(function SocialButton({
       href={quoteUrl}
       style={{backgroundColor: styleTheme.color}}
     >
-      <FontAwesomeIcon icon={iconClass}/>
+      {fontAwesomeIcon}
     </a>
   );
 });

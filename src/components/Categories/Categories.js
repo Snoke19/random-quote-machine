@@ -25,12 +25,12 @@ const Category = memo(
   }
 );
 
-export default function Categories({
-                                     categories,
-                                     styleTheme,
-                                     onRemoveCategory,
-                                     addCategory
-                                   }) {
+const Categories = memo(function Categories({
+                                              categories,
+                                              styleTheme,
+                                              onRemoveCategory,
+                                              addCategory
+                                            }) {
   const inputRef = useRef(null);
   const categoryId = useId();
   const suggestedCategoryId = useId();
@@ -104,7 +104,7 @@ export default function Categories({
       </datalist>
     </div>
   );
-}
+});
 
 Category.propTypes = {
   category: PropTypes.string.isRequired,
@@ -119,3 +119,5 @@ Categories.propTypes = {
   onRemoveCategory: PropTypes.func.isRequired,
   addCategory: PropTypes.func.isRequired
 };
+
+export default Categories;
