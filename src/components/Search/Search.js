@@ -1,4 +1,4 @@
-import React, {useCallback, useId, useRef, useState} from 'react';
+import React, {useCallback, useId, useMemo, useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {fetchQuotesByTextQuote} from "../../services/QuoteService";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
@@ -9,17 +9,17 @@ import {useClickAway} from "../hooks/useClickAway";
 
 export function Search() {
 
-  const ref = useClickAway(() => setFilteredQuotes([]));
-
-  const debounceTimeoutRef = useRef(null);
-
   const quoteId = useId();
   const categoryId = useId();
 
-  const {styleTheme} = useStyleThemeContext();
-
+  const styleTheme = useStyleThemeContext();
   const [inputSearch, setInputSearch] = useState('');
+  const debounceTimeoutRef = useRef(null);
   const [filteredQuotes, setFilteredQuotes] = useState([]);
+  const ref = useClickAway(() => setFilteredQuotes([]));
+
+  const iconSearch = useMemo(() =>
+    <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>, [filteredQuotes.length]);
 
   const fetchQuotes = useCallback(async (searchValue) => {
     try {
@@ -84,7 +84,7 @@ export function Search() {
           placeholder="Search quotes..."
         />
         <button className="search-icon-button" onClick={handleSearchIconClick}>
-          <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>
+          {iconSearch}
         </button>
 
         {filteredQuotes.length > 0 && (
