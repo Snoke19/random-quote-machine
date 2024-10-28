@@ -1,11 +1,11 @@
-import React from "react";
+import React, {memo} from "react";
 import PropTypes from "prop-types";
 
 import "./QuoteAndAuthor.css";
 
 const DEFAULT_TEXT_IF_CATEGORIES_NOT_ADDED = "Please add categories for getting random quote!"
 
-export default function QuoteAndAuthor({quote, styleTheme}) {
+const QuoteAndAuthor = memo(function QuoteAndAuthor({quote, styleTheme}) {
   const {color, fade} = styleTheme;
 
   return (
@@ -25,9 +25,11 @@ export default function QuoteAndAuthor({quote, styleTheme}) {
       </div>
     </div>
   );
-}
+});
 
 QuoteAndAuthor.propTypes = {
   quote: PropTypes.object.isRequired,
   styleTheme: PropTypes.object.isRequired
 };
+
+export default QuoteAndAuthor;

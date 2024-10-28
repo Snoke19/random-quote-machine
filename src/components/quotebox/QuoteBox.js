@@ -1,12 +1,10 @@
-import React, {useCallback, useEffect, useId} from "react";
+import React, {useCallback, useEffect, useId, useMemo} from "react";
 
 import "./QuoteBox.css";
 
+import SocialButton from "../Buttons/SocialButton";
 import Categories from "../Categories/Categories";
 import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
-import SocialButton from "../Buttons/SocialButton";
-import GroupButtons from "../Buttons/GroupButtons";
-
 import {useCopyToClipboard} from "../hooks/useCopyToClipboard";
 import useCategory from "../hooks/useCategory";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
@@ -68,6 +66,10 @@ export default function QuoteBox() {
     },
   ];
 
+  const iconCopyClipboard = useMemo(() => <FontAwesomeIcon icon={faCopy} size="xl"/>, []);
+  const iconMagicRandomQuote = useMemo(() => <><FontAwesomeIcon icon={faWandMagicSparkles}
+                                                                style={{paddingRight: '5px'}}/> New quote</>, []);
+
   return (
     <div className="quote-box">
       <QuoteAndAuthor quote={quote} styleTheme={styleTheme}/>
@@ -78,7 +80,7 @@ export default function QuoteBox() {
         addCategory={addCategory}
       />
       <div className="buttons-container">
-        <GroupButtons groupingClass="group-buttons group-buttons-wrap">
+        <div className="group-buttons group-buttons-wrap">
           {socialButtons.map((button, id) => (
             <SocialButton
               key={idSocialButton + id}
@@ -88,8 +90,8 @@ export default function QuoteBox() {
               iconClass={button.iconClass}
             />
           ))}
-        </GroupButtons>
-        <GroupButtons groupingClass="group-buttons">
+        </div>
+        <div className="group-buttons">
           <button
             className="button clipboard-button"
             style={{backgroundColor: styleTheme.color}}
@@ -104,7 +106,7 @@ export default function QuoteBox() {
             }}
             aria-label="Copy quote to clipboard"
           >
-            <FontAwesomeIcon icon={faCopy} size="xl"/>
+            {iconCopyClipboard}
           </button>
           <button
             className="button quote-button"
@@ -112,9 +114,9 @@ export default function QuoteBox() {
             onClick={loadQuoteWithStyle}
             aria-label="Load new quote"
           >
-            <FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}}/> New quote
+            {iconMagicRandomQuote}
           </button>
-        </GroupButtons>
+        </div>
       </div>
     </div>
   );
