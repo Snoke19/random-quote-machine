@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import colors from "../../utils/colors";
 
-export default function useStyleTheme(theme) {
+export default function useStyleTheme() {
   const [color, setColor] = useState(colors[0]);
   const [fade, setFade] = useState(false);
 

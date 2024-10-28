@@ -9,9 +9,7 @@ import {useClickAway} from "../hooks/useClickAway";
 
 export function Search() {
 
-  const ref = useClickAway(() => {
-    setFilteredQuotes([]);
-  });
+  const ref = useClickAway(() => setFilteredQuotes([]));
 
   const debounceTimeoutRef = useRef(null);
 
@@ -73,8 +71,6 @@ export function Search() {
       await fetchQuotes(inputSearch);
     }
   };
-
-  console.log("Search rendering!")
 
   return (
     <div className="search-container" ref={ref}>

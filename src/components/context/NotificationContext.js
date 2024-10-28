@@ -12,7 +12,7 @@ export const NotificationProvider = ({children}) => {
     notification,
     displayNotification
   }), [notification, displayNotification]);
-  console.log("Rendering NotificationProvider");
+
   return (
     <NotificationContext.Provider value={contextValue}>
       {children}
