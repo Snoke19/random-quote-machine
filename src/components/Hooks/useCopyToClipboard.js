@@ -11,12 +11,7 @@ export default function useCopyToClipboard() {
           console.log("writeText not supported!");
         }
       } catch (e) {
-        const tempTextArea = document.createElement("textarea");
-        tempTextArea.value = value;
-        document.body.appendChild(tempTextArea);
-        tempTextArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempTextArea);
+        throw Error(e);
       }
     };
 
