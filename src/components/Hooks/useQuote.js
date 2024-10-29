@@ -37,6 +37,7 @@ export default function useQuote(chosenCategories) {
     error,
     quote,
     loadQuote,
+    setQuote
   ];
 }
 

@@ -1,9 +1,11 @@
 import React, {memo, useCallback, useEffect, useId, useRef, useState} from "react";
-import PropTypes from "prop-types";
+
 import "./Categories.css";
+
+import PropTypes from "prop-types";
 import fetchCategoriesByName from "../../services/CategoryService";
-import {removeSlashes} from "../../utils/strValidation";
-import {useNotificationContext} from "../context/NotificationContext";
+import removeSlashes from "../../utils/strValidation";
+import {useNotificationContext} from "../Context/NotificationContext";
 
 const ENTER_KEY = "Enter";
 const BACKSPACE_KEY = "Backspace";
@@ -25,86 +27,83 @@ const Category = memo(
   }
 );
 
-const Categories = memo(function Categories({
-                                              categories,
-                                              styleTheme,
-                                              onRemoveCategory,
-                                              addCategory
-                                            }) {
-  const inputRef = useRef(null);
-  const categoryId = useId();
-  const suggestedCategoryId = useId();
+const Categories = memo(
+  function Categories({categories, styleTheme, onRemoveCategory, addCategory}) {
+    const inputRef = useRef(null);
+    const categoryId = useId();
+    const suggestedCategoryId = useId();
 
-  const {displayNotification} = useNotificationContext();
-  const [categoryInput, setCategoryInput] = useState("");
-  const [suggestedCategories, setSuggestedCategories] = useState([]);
+    const {displayNotification} = useNotificationContext();
+    const [categoryInput, setCategoryInput] = useState("");
+    const [suggestedCategories, setSuggestedCategories] = useState([]);
 
-  const handleCategoryInputChange = useCallback(
-    async (e) => {
-      const inputValue = e.target.value;
-      setCategoryInput(inputValue);
+    const handleCategoryInputChange = useCallback(
+      async (e) => {
+        const inputValue = e.target.value;
+        setCategoryInput(inputValue);
 
-      if (inputValue.trim().length >= 1) {
-        try {
-          const sanitizedInput = removeSlashes(inputValue);
-          const categorySuggestions = await fetchCategoriesByName(sanitizedInput);
-          setSuggestedCategories(categorySuggestions);
-        } catch (error) {
-          displayNotification(error.message);
+        if (inputValue.trim().length >= 1) {
+          try {
+            const sanitizedInput = removeSlashes(inputValue);
+            const categorySuggestions = await fetchCategoriesByName(sanitizedInput);
+            setSuggestedCategories(categorySuggestions);
+          } catch (error) {
+            displayNotification(error.message);
+          }
+        } else {
+          setSuggestedCategories([]);
         }
-      } else {
+      }, [displayNotification]);
+
+    const onKeyDown = useCallback((e) => {
+      if (e.key === ENTER_KEY && categoryInput.trim()) {
+        addCategory(categoryInput);
+        setCategoryInput("");
         setSuggestedCategories([]);
+      } else if (e.key === BACKSPACE_KEY && categoryInput === "") {
+        onRemoveCategory(e);
       }
-    }, [displayNotification]);
+    }, [categoryInput, addCategory, onRemoveCategory]);
 
-  const onKeyDown = useCallback((e) => {
-    if (e.key === ENTER_KEY && categoryInput.trim()) {
-      addCategory(categoryInput);
-      setCategoryInput("");
-      setSuggestedCategories([]);
-    } else if (e.key === BACKSPACE_KEY && categoryInput === "") {
-      onRemoveCategory(e);
-    }
-  }, [categoryInput, addCategory, onRemoveCategory]);
+    useEffect(() => {
+      inputRef.current?.focus();
+    }, []);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  return (
-    <div className="categories-input-container">
-      {categories.map((category, index) => (
-        <Category
-          key={`${categoryId}-${index}`}
-          category={category}
-          index={index}
-          onRemoveCategory={onRemoveCategory}
-          styleTheme={styleTheme}
+    return (
+      <div className="categories-input-container">
+        {categories.map((category, index) => (
+          <Category
+            key={`${categoryId}-${index}`}
+            category={category}
+            index={index}
+            onRemoveCategory={onRemoveCategory}
+            styleTheme={styleTheme}
+          />
+        ))}
+        <input
+          list="suggestedCategories"
+          id="category"
+          name="category"
+          autoComplete="off"
+          type="text"
+          ref={inputRef}
+          value={categoryInput}
+          onChange={handleCategoryInputChange}
+          onKeyDown={onKeyDown}
+          placeholder="Enter category"
+          className="categories-input"
         />
-      ))}
-      <input
-        list="suggestedCategories"
-        id="category"
-        name="category"
-        autoComplete="off"
-        type="text"
-        ref={inputRef}
-        value={categoryInput}
-        onChange={handleCategoryInputChange}
-        onKeyDown={onKeyDown}
-        placeholder="Enter category"
-        className="categories-input"
-      />
-      <datalist id="suggestedCategories">
-        {suggestedCategories.map((item) => {
-          return (
-            <option key={`${item.name}-${suggestedCategoryId}`} value={item.name}/>
-          );
-        })}
-      </datalist>
-    </div>
-  );
-});
+        <datalist id="suggestedCategories">
+          {suggestedCategories.map((item) => {
+            return (
+              <option key={`${item.name}-${suggestedCategoryId}`} value={item.name}/>
+            );
+          })}
+        </datalist>
+      </div>
+    );
+  }
+);
 
 Category.propTypes = {
   category: PropTypes.string.isRequired,

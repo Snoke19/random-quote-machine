@@ -5,7 +5,7 @@ import {
   removeLocalCategory,
   saveCategoriesLocally,
 } from "../../utils/localStorageUtils";
-import {removeSlashes} from "../../utils/strValidation";
+import removeSlashes from "../../utils/strValidation";
 
 export default function useCategory() {
   const [categories, setCategories] = useState(() => getLocalCategories());

@@ -2,32 +2,36 @@ import React, {useCallback, useEffect, useId, useMemo} from "react";
 
 import "./QuoteBox.css";
 
-import SocialButton from "../Buttons/SocialButton";
-import Categories from "../Categories/Categories";
-import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
-import {useCopyToClipboard} from "../hooks/useCopyToClipboard";
-import useCategory from "../hooks/useCategory";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
 import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
 import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
 import {faWandMagicSparkles} from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCopy} from "@fortawesome/free-regular-svg-icons";
-import {useStyleThemeContext} from "../context/StyleThemeContext";
-import {getRandomColor} from "../../utils/randomColor";
-import useStyleTheme from "../hooks/useStyleTheme";
-import useQuote from "../hooks/useQuote";
-import {useNotificationContext} from "../context/NotificationContext";
+import Categories from "../Categories/Categories";
+import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
+import SocialButton from "../Buttons/SocialButton";
+import useCopyToClipboard from "../Hooks/useCopyToClipboard";
+import useCategory from "../Hooks/useCategory";
+import getRandomColor from "../../utils/randomColor";
+import useStyleTheme from "../Hooks/useStyleTheme";
+import useQuote from "../Hooks/useQuote";
+import {useStyleThemeContext} from "../Context/StyleThemeContext";
+import {useNotificationContext} from "../Context/NotificationContext";
+import {useSearchContext} from "../Context/SearchContext";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
 
   const [categories, removeLastCategoryOrByIndex, addCategory] = useCategory();
+
+  const {searchQuote} = useSearchContext();
+  const {updateStyleThemeContext} = useStyleThemeContext();
   const {displayNotification} = useNotificationContext();
   const [styleTheme, updateStyleTheme] = useStyleTheme();
-  const [error, quote, loadQuote] = useQuote(categories);
+
+  const [error, quote, loadQuote, setQuote] = useQuote(categories);
   const copyToClipboard = useCopyToClipboard();
-  const {updateStyleThemeContext} = useStyleThemeContext();
 
   const loadQuoteWithStyle = useCallback(() => {
     const newColor = getRandomColor();
@@ -47,6 +51,14 @@ export default function QuoteBox() {
       console.error(e);
     })
   }
+
+  useEffect(() => {
+    if (searchQuote) {
+      const {quoteText, author: {name: authorName} = {}} = searchQuote || {};
+      const result = {quote: quoteText, author: authorName};
+      setQuote(result);
+    }
+  }, [searchQuote, setQuote]);
 
   useEffect(() => {
     updateStyleThemeContext(styleTheme.color);

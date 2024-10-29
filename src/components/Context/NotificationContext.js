@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useMemo} from 'react';
-import useNotification from "../hooks/useNotification";
+import useNotification from "../Hooks/useNotification";
 import Notification from "../Notification/Notification";
 import PropTypes from "prop-types";
 

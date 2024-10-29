@@ -1,6 +1,6 @@
 import {useCallback} from "react";
 
-export function useCopyToClipboard() {
+export default function useCopyToClipboard() {
 
   return useCallback((value) => {
     const handleCopy = async () => {
