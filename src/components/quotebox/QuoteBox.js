@@ -22,16 +22,11 @@ import {useNotificationContext} from "../context/NotificationContext";
 export default function QuoteBox() {
   const idSocialButton = useId();
 
-  const {
-    categories,
-    removeLastCategoryOrByIndex,
-    addCategory,
-  } = useCategory();
-
+  const [categories, removeLastCategoryOrByIndex, addCategory,] = useCategory();
   const {displayNotification} = useNotificationContext();
-  const {styleTheme, updateStyleTheme} = useStyleTheme();
-  const {quote, loadQuote} = useQuote(categories);
-  const [copiedText, copyToClipboard] = useCopyToClipboard();
+  const [styleTheme, updateStyleTheme] = useStyleTheme();
+  const [quote, loadQuote] = useQuote(categories);
+  const copyToClipboard = useCopyToClipboard();
   const {updateStyleThemeContext} = useStyleThemeContext();
 
   const loadQuoteWithStyle = useCallback(() => {
@@ -40,35 +35,45 @@ export default function QuoteBox() {
     loadQuote(categories);
   }, [categories, loadQuote, updateStyleTheme]);
 
+  const handleCopyToClipboard = () => {
+    const copiedQuote = `${quote.quote} - ${quote.author}`;
+    copyToClipboard(copiedQuote).then(() => {
+      displayNotification(`The quote "${copiedQuote.substring(0, 20)}..." has been copied!`);
+    }).catch((e) => {
+      displayNotification('Cannot copy the quote!');
+      console.error(e);
+    })
+  }
+
   useEffect(() => {
     updateStyleThemeContext(styleTheme.color);
   }, [styleTheme.color, updateStyleThemeContext]);
 
-  const tweetQuoteUrl = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`;
-  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`;
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("")}`;
-
-  const socialButtons = [
-    {
-      quoteUrl: tweetQuoteUrl,
-      title: "Tweet this quote!",
-      iconClass: faTwitter,
-    },
-    {
-      quoteUrl: linkedinShareUrl,
-      title: "Post on LinkedIn!",
-      iconClass: faLinkedin,
-    },
-    {
-      quoteUrl: facebookShareUrl,
-      title: "Post on Facebook!",
-      iconClass: faFacebook,
-    },
-  ];
+  const socialButtons = useMemo(
+    () => [
+      {
+        quoteUrl: `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=%22${encodeURIComponent(quote.quote)}%22%20${encodeURIComponent(quote.author)}`,
+        title: "Tweet this quote!",
+        iconClass: faTwitter,
+      },
+      {
+        quoteUrl: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://your-website.com")}&text=${encodeURIComponent(quote.quote)} - ${encodeURIComponent(quote.author)}`,
+        title: "Post on LinkedIn!",
+        iconClass: faLinkedin,
+      },
+      {
+        quoteUrl: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("")}`,
+        title: "Post on Facebook!",
+        iconClass: faFacebook,
+      },
+    ],
+    [quote]
+  );
 
   const iconCopyClipboard = useMemo(() => <FontAwesomeIcon icon={faCopy} size="xl"/>, []);
-  const iconMagicRandomQuote = useMemo(() => <><FontAwesomeIcon icon={faWandMagicSparkles}
-                                                                style={{paddingRight: '5px'}}/> New quote</>, []);
+  const iconMagicRandomQuote = useMemo(() => {
+    return <><FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}}/> New quote</>
+  }, []);
 
   return (
     <div className="quote-box">
@@ -95,15 +100,7 @@ export default function QuoteBox() {
           <button
             className="button clipboard-button"
             style={{backgroundColor: styleTheme.color}}
-            onClick={() => {
-              const copiedQuote = `${quote.quote} - ${quote.author}`;
-              copyToClipboard(copiedQuote).then(() => {
-                displayNotification(`The quote "${copiedQuote.substring(0, 20)}..." has been copied!`);
-              }).catch((e) => {
-                displayNotification('Cannot copy the quote!');
-                console.error(e);
-              })
-            }}
+            onClick={handleCopyToClipboard}
             aria-label="Copy quote to clipboard"
           >
             {iconCopyClipboard}

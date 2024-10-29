@@ -1,15 +1,12 @@
-import {useCallback, useState} from "react";
+import {useCallback} from "react";
 
 export function useCopyToClipboard() {
 
-  const [state, setState] = useState(null);
-
-  const copyToClipboard = useCallback((value) => {
+  return useCallback((value) => {
     const handleCopy = async () => {
       try {
         if (navigator?.clipboard?.writeText) {
           await navigator.clipboard.writeText(value);
-          setState(value);
         } else {
           console.log("writeText not supported!");
         }
@@ -20,12 +17,9 @@ export function useCopyToClipboard() {
         tempTextArea.select();
         document.execCommand("copy");
         document.body.removeChild(tempTextArea);
-        setState(value);
       }
     };
 
     return handleCopy();
   }, []);
-
-  return [state, copyToClipboard];
 }

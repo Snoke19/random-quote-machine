@@ -46,11 +46,11 @@ export default function useCategory() {
     setCategories(localCategories);
   }, [updateTrigger]);
 
-  return {
+  return [
     categories,
     removeLastCategoryOrByIndex,
     addCategory,
-  };
+  ];
 }
 
 const validateCategory = (value) => {

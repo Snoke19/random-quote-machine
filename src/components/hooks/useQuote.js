@@ -58,9 +58,9 @@ export default function useQuote(chosenCategories) {
     }
   }, [chosenCategories, loadQuote]);
 
-  return {
+  return [
     quote,
     loadQuote,
-  };
+  ];
 }
 

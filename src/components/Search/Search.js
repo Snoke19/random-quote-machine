@@ -12,7 +12,7 @@ export function Search() {
   const quoteId = useId();
   const categoryId = useId();
 
-  const styleTheme = useStyleThemeContext();
+  const {styleTheme} = useStyleThemeContext();
   const [inputSearch, setInputSearch] = useState('');
   const debounceTimeoutRef = useRef(null);
   const [filteredQuotes, setFilteredQuotes] = useState([]);

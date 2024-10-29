@@ -15,5 +15,5 @@ export default function useStyleTheme() {
     }, 500);
   };
 
-  return {styleTheme, updateStyleTheme};
+  return [styleTheme, updateStyleTheme];
 }
