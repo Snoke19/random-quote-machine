@@ -4,49 +4,24 @@ import {fetchRandomQuoteByCategories} from "../../services/QuoteService";
 export default function useQuote(chosenCategories) {
 
   const [quote, setQuote] = useState({quote: "", author: ""});
+  const [error, setError] = useState("");
 
   const loadQuote = useCallback(async (categories = [chosenCategories]) => {
-
       try {
-        const {
-          quoteText,
-          author: {name: authorName},
-        } = await fetchRandomQuoteByCategories(categories);
-
-        setQuote((prevState) => ({
-          ...prevState,
-          quote: quoteText,
-          author: authorName,
-        }));
+        const {quoteText, author: {name: authorName}} = await fetchRandomQuoteByCategories(categories);
+        setQuote({quote: quoteText, author: authorName});
       } catch (error) {
         const errorDetails = error.cause;
-
         if (errorDetails) {
           if (errorDetails.type === "NOT_EMPTY_VALIDATION") {
-            setQuote((prevState) => ({
-              ...prevState,
-              quote: errorDetails.details["categories"],
-              author: "",
-            }));
+            setError(errorDetails.details["categories"]);
           } else if (errorDetails.type === "NOT_FOUND_ENTITY") {
-            setQuote((prevState) => ({
-              ...prevState,
-              quote: errorDetails.message,
-              author: "",
-            }));
+            setError(errorDetails.message);
           } else {
-            setQuote((prevState) => ({
-              ...prevState,
-              quote: "Error loading quote",
-              author: "",
-            }));
+            setError("Error loading quote");
           }
         } else {
-          setQuote((prevState) => ({
-            ...prevState,
-            quote: error.message,
-            author: "",
-          }));
+          setError(error.message);
         }
       }
     }, [chosenCategories]
@@ -59,6 +34,7 @@ export default function useQuote(chosenCategories) {
   }, [chosenCategories, loadQuote]);
 
   return [
+    error,
     quote,
     loadQuote,
   ];

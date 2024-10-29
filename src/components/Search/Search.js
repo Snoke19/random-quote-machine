@@ -6,29 +6,34 @@ import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import './Search.css';
 import {useStyleThemeContext} from "../context/StyleThemeContext";
 import {useClickAway} from "../hooks/useClickAway";
+import {useNotificationContext} from "../context/NotificationContext";
 
 export function Search() {
 
   const quoteId = useId();
   const categoryId = useId();
-
+  const {displayNotification} = useNotificationContext();
   const {styleTheme} = useStyleThemeContext();
+
   const [inputSearch, setInputSearch] = useState('');
-  const debounceTimeoutRef = useRef(null);
   const [filteredQuotes, setFilteredQuotes] = useState([]);
+
+  const debounceTimeoutRef = useRef(null);
   const ref = useClickAway(() => setFilteredQuotes([]));
 
   const iconSearch = useMemo(() =>
-    <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>, [filteredQuotes.length]);
+      <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>,
+    [filteredQuotes.length]
+  );
 
   const fetchQuotes = useCallback(async (searchValue) => {
     try {
       const quotes = await fetchQuotesByTextQuote(searchValue);
       setFilteredQuotes(quotes);
     } catch (error) {
-      console.error('Failed to fetch quotes:', error);
+      displayNotification('Failed to fetch quotes');
     }
-  }, []);
+  }, [displayNotification]);
 
   const handleSearchInputChange = useCallback((e) => {
       const {value} = e.target;
@@ -52,10 +57,10 @@ export function Search() {
       try {
         await fetchQuotes(inputSearch);
       } catch (error) {
-        console.error('Failed to fetch quotes on focus:', error);
+        displayNotification('Failed to fetch quotes');
       }
     }
-  }, [inputSearch, filteredQuotes, fetchQuotes]);
+  }, [displayNotification, inputSearch, filteredQuotes, fetchQuotes]);
 
   const handleQuoteSelect = useCallback((quoteText) => {
     setInputSearch(quoteText);
@@ -63,7 +68,6 @@ export function Search() {
   }, []);
 
   const handleSearchIconClick = async () => {
-
     if (filteredQuotes.length > 0) {
       setInputSearch('');
       setFilteredQuotes([]);
@@ -90,24 +94,15 @@ export function Search() {
         {filteredQuotes.length > 0 && (
           <ul className={`dropdown ${filteredQuotes.length > 0 ? 'show' : ''}`}>
             {filteredQuotes.map(({id, quoteText, author: {name: authorName}, categories}) => (
-              <li key={quoteId + id} className="dropdown-item">
-                <button className="button-quote-block" onClick={() => handleQuoteSelect(quoteText)}>
-                  <div className="search-quote-box">
-                    <div className="search-quote">
-                      <span className="search-quote-text">{quoteText}</span>
-                      <span className="search-author-text"> — {authorName}</span>
-                    </div>
-                    <div className="search-categories">
-                      {categories.map(({id, name}) => (
-                        <span className="search-category-label" key={categoryId + id}
-                              style={{backgroundColor: styleTheme}}>
-                          {name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </button>
-              </li>
+              <QuoteItem
+                key={quoteId + id}
+                categoryId={categoryId}
+                quoteText={quoteText}
+                authorName={authorName}
+                categories={categories}
+                styleTheme={styleTheme}
+                handleQuoteSelect={handleQuoteSelect}
+              />
             ))}
           </ul>
         )}
@@ -115,3 +110,29 @@ export function Search() {
     </div>
   );
 }
+
+const QuoteItem = React.memo(({
+                                categoryId,
+                                quoteText,
+                                authorName,
+                                categories,
+                                styleTheme,
+                                handleQuoteSelect
+                              }) => (
+  <li className="dropdown-item">
+    <button className="button-quote-block" onClick={() => handleQuoteSelect(quoteText)}>
+      <div className="search-quote-box">
+        <div className="search-quote">
+          <span className="search-quote-text">{quoteText}</span>
+          <span className="search-author-text"> — {authorName}</span>
+        </div>
+        <div className="search-categories">
+          {categories.map(({id, name}) => (
+            <span className="search-category-label" key={categoryId + id}
+                  style={{backgroundColor: styleTheme}}>{name}</span>
+          ))}
+        </div>
+      </div>
+    </button>
+  </li>
+));

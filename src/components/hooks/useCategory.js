@@ -55,6 +55,5 @@ export default function useCategory() {
 
 const validateCategory = (value) => {
   if (!value) return {isValid: false, message: "Category cannot be empty!"};
-  if (!isNaN(Number(value))) return {isValid: false, message: "Category cannot be numeric only!"};
   return {isValid: true};
 };

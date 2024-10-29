@@ -22,10 +22,10 @@ import {useNotificationContext} from "../context/NotificationContext";
 export default function QuoteBox() {
   const idSocialButton = useId();
 
-  const [categories, removeLastCategoryOrByIndex, addCategory,] = useCategory();
+  const [categories, removeLastCategoryOrByIndex, addCategory] = useCategory();
   const {displayNotification} = useNotificationContext();
   const [styleTheme, updateStyleTheme] = useStyleTheme();
-  const [quote, loadQuote] = useQuote(categories);
+  const [error, quote, loadQuote] = useQuote(categories);
   const copyToClipboard = useCopyToClipboard();
   const {updateStyleThemeContext} = useStyleThemeContext();
 
@@ -33,7 +33,10 @@ export default function QuoteBox() {
     const newColor = getRandomColor();
     updateStyleTheme(newColor, true);
     loadQuote(categories);
-  }, [categories, loadQuote, updateStyleTheme]);
+    if (error) {
+      displayNotification(error);
+    }
+  }, [error, displayNotification, categories, loadQuote, updateStyleTheme]);
 
   const handleCopyToClipboard = () => {
     const copiedQuote = `${quote.quote} - ${quote.author}`;
