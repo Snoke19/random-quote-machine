@@ -94,20 +94,20 @@ export default function QuoteBox() {
     <div className="quote-box">
       <QuoteAndAuthor quote={quote} styleTheme={styleTheme}/>
       <Categories
-        categories={categories}
-        styleTheme={styleTheme}
+        categoryList={categories}
+        theme={styleTheme}
         onRemoveCategory={removeLastCategoryOrByIndex}
-        addCategory={addCategory}
+        onAddCategory={addCategory}
       />
       <div className="buttons-container">
         <div className="group-buttons group-buttons-wrap">
           {socialButtons.map((button, id) => (
             <SocialButton
               key={idSocialButton + id}
-              quoteUrl={button.quoteUrl}
-              styleTheme={styleTheme}
-              title={button.title}
-              iconClass={button.iconClass}
+              url={button.quoteUrl}
+              theme={styleTheme}
+              label={button.title}
+              icon={button.iconClass}
             />
           ))}
         </div>

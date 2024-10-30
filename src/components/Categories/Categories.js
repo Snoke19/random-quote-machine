@@ -10,28 +10,12 @@ import {useNotificationContext} from "../Context/NotificationContext";
 const ENTER_KEY = "Enter";
 const BACKSPACE_KEY = "Backspace";
 
-const Category = memo(
-  function Category({category, index, onRemoveCategory, styleTheme}) {
-    return (
-      <div className="category" style={{backgroundColor: styleTheme.color}}>
-        <span>{category}</span>
-        <button
-          className="remove-category"
-          onClick={() => onRemoveCategory(index)}
-          aria-label={`Remove category ${category}`}
-        >
-          &times;
-        </button>
-      </div>
-    );
-  }
-);
-
 const Categories = memo(
-  function Categories({categories, styleTheme, onRemoveCategory, addCategory}) {
+  function Categories({categoryList, theme, onRemoveCategory, onAddCategory}) {
+
     const inputRef = useRef(null);
-    const categoryId = useId();
-    const suggestedCategoryId = useId();
+    const uniqueCategoryId = useId();
+    const uniqueSuggestionId = useId();
 
     const {displayNotification} = useNotificationContext();
     const [categoryInput, setCategoryInput] = useState("");
@@ -42,7 +26,7 @@ const Categories = memo(
         const inputValue = e.target.value;
         setCategoryInput(inputValue);
 
-        if (inputValue.trim().length >= 1) {
+        if (inputValue.trim()) {
           try {
             const sanitizedInput = removeSlashes(inputValue);
             const categorySuggestions = await fetchCategoriesByName(sanitizedInput);
@@ -57,13 +41,13 @@ const Categories = memo(
 
     const onKeyDown = useCallback((e) => {
       if (e.key === ENTER_KEY && categoryInput.trim()) {
-        addCategory(categoryInput);
+        onAddCategory(categoryInput);
         setCategoryInput("");
         setSuggestedCategories([]);
       } else if (e.key === BACKSPACE_KEY && categoryInput === "") {
         onRemoveCategory(e);
       }
-    }, [categoryInput, addCategory, onRemoveCategory]);
+    }, [categoryInput, onAddCategory, onRemoveCategory]);
 
     useEffect(() => {
       inputRef.current?.focus();
@@ -71,32 +55,30 @@ const Categories = memo(
 
     return (
       <div className="categories-input-container">
-        {categories.map((category, index) => (
-          <Category
-            key={`${categoryId}-${index}`}
-            category={category}
+        {categoryList.map((category, index) => (
+          <CategoryItem
+            key={`${uniqueCategoryId}-${index}`}
+            name={category}
             index={index}
-            onRemoveCategory={onRemoveCategory}
-            styleTheme={styleTheme}
+            onRemove={onRemoveCategory}
+            theme={theme}
           />
         ))}
         <input
           list="suggestedCategories"
-          id="category"
-          name="category"
-          autoComplete="off"
-          type="text"
           ref={inputRef}
+          type="text"
           value={categoryInput}
           onChange={handleCategoryInputChange}
           onKeyDown={onKeyDown}
           placeholder="Enter category"
           className="categories-input"
+          autoComplete="off"
         />
         <datalist id="suggestedCategories">
-          {suggestedCategories.map((item) => {
+          {suggestedCategories.map((suggestion) => {
             return (
-              <option key={`${item.name}-${suggestedCategoryId}`} value={item.name}/>
+              <option key={`${suggestion.name}-${uniqueSuggestionId}`} value={suggestion.name}/>
             );
           })}
         </datalist>
@@ -105,18 +87,35 @@ const Categories = memo(
   }
 );
 
-Category.propTypes = {
-  category: PropTypes.string.isRequired,
+const CategoryItem = memo(
+  function CategoryItem({name, index, onRemove, theme}) {
+    return (
+      <div className="category" style={{backgroundColor: theme.color}}>
+        <span>{name}</span>
+        <button
+          className="remove-category"
+          onClick={() => onRemove(index)}
+          aria-label={`Remove category ${name}`}
+        >
+          &times;
+        </button>
+      </div>
+    );
+  }
+);
+
+CategoryItem.propTypes = {
+  name: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  onRemoveCategory: PropTypes.func.isRequired,
-  styleTheme: PropTypes.object.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  theme: PropTypes.shape({color: PropTypes.string}).isRequired
 };
 
 Categories.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-  styleTheme: PropTypes.object.isRequired,
+  categoryList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  theme: PropTypes.shape({color: PropTypes.string}).isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
-  addCategory: PropTypes.func.isRequired
+  onAddCategory: PropTypes.func.isRequired,
 };
 
 export default Categories;
