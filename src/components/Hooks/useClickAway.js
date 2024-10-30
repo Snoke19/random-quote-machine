@@ -1,7 +1,6 @@
 import {useEffect, useLayoutEffect, useRef} from "react";
 
-
-export function useClickAway(cb) {
+export default function useClickAway(cb) {
   const ref = useRef(null);
   const refCb = useRef(cb);
 

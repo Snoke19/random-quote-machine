@@ -1,51 +1,53 @@
-import React, {memo, useCallback, useId, useMemo, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useId, useMemo, useState} from 'react';
+import PropTypes from "prop-types";
+
+import './Search.css';
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {fetchQuotesByTextQuote} from "../../services/QuoteService";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
-import './Search.css';
+import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 import {useStyleThemeContext} from "../Context/StyleThemeContext";
-import {useClickAway} from "../Hooks/useClickAway";
 import {useNotificationContext} from "../Context/NotificationContext";
 import {useSearchContext} from "../Context/SearchContext";
-import PropTypes from "prop-types";
+import useClickAway from "../Hooks/useClickAway";
+import useDebounce from "../Hooks/useDebounce";
 
 export default function Search() {
 
   const quoteId = useId();
   const categoryId = useId();
 
+  const ref = useClickAway(() => setFilteredQuotes([]));
+
   const {styleTheme} = useStyleThemeContext();
   const {setSearchQuote} = useSearchContext();
   const {displayNotification} = useNotificationContext();
 
+  const [loading, setLoading] = useState(false);
   const [inputSearch, setInputSearch] = useState('');
   const [filteredQuotes, setFilteredQuotes] = useState([]);
-  const ref = useClickAway(() => setFilteredQuotes([]));
 
-  const debounceTimeoutRef = useRef(null);
+  const debouncedSearchTerm = useDebounce(inputSearch, 500);
 
   const fetchQuotes = useCallback(async (searchValue) => {
+    setLoading(true);
     try {
       const quotes = await fetchQuotesByTextQuote(searchValue);
       setFilteredQuotes(quotes);
     } catch (error) {
       displayNotification('Failed to fetch quotes');
+    } finally {
+      setLoading(false);
     }
   }, [displayNotification]);
 
   const handleSearchInputChange = useCallback((e) => {
+      e.preventDefault();
       const {value} = e.target;
-      setInputSearch(value);
-
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-
-      if (value.length > 0) {
-        debounceTimeoutRef.current = setTimeout(() => fetchQuotes(value), 500);
-      } else {
-        setFilteredQuotes([]);
+      if (value.length >= 0) {
+        setInputSearch(value);
       }
     },
     [fetchQuotes]
@@ -69,9 +71,20 @@ export default function Search() {
     }
   };
 
+  useEffect(() => {
+      if (debouncedSearchTerm) {
+        fetchQuotes(debouncedSearchTerm);
+      }
+    }, [debouncedSearchTerm]
+  );
+
   const iconSearch = useMemo(() =>
-      <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>,
-    [filteredQuotes.length]
+      loading ? (
+        <FontAwesomeIcon icon={faSpinner} spin/>
+      ) : (
+        <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>
+      ),
+    [loading, filteredQuotes.length]
   );
 
   return (
@@ -85,7 +98,7 @@ export default function Search() {
           onChange={handleSearchInputChange}
           placeholder="Search quotes..."
         />
-        <button className="search-icon-button" onClick={handleSearchIconClick}>
+        <button className="search-icon-button" onClick={handleSearchIconClick} disabled={loading}>
           {iconSearch}
         </button>
         {filteredQuotes.length > 0 && (
