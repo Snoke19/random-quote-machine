@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const SocialButton = memo(
-  function SocialButton({quoteUrl, styleTheme, title, iconClass}) {
-    const fontAwesomeIcon = useMemo(() => <FontAwesomeIcon icon={iconClass}/>, [iconClass]);
+  function SocialButton({url, theme, label, icon}) {
+    const fontAwesomeIcon = useMemo(() => <FontAwesomeIcon icon={icon}/>, [icon]);
     return (
       <a
         className="button social-button"
-        title={title}
-        aria-label={title}
+        href={url}
+        title={label}
+        aria-label={label}
         target="_blank"
         rel="noopener noreferrer"
-        href={quoteUrl}
-        style={{backgroundColor: styleTheme.color}}
+        style={{backgroundColor: theme.color}}
       >
         {fontAwesomeIcon}
       </a>
@@ -22,10 +22,12 @@ const SocialButton = memo(
 );
 
 SocialButton.propTypes = {
-  quoteUrl: PropTypes.string.isRequired,
-  styleTheme: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-  iconClass: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
+  theme: PropTypes.shape({
+    color: PropTypes.string,
+  }).isRequired,
+  label: PropTypes.string.isRequired,
+  icon: PropTypes.object.isRequired,
 };
 
 export default SocialButton;
