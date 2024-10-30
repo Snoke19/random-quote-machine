@@ -49,8 +49,7 @@ export default function Search() {
       if (value.length >= 0) {
         setInputSearch(value);
       }
-    },
-    [fetchQuotes]
+    }, []
   );
 
   const handleSearchInputFocus = useCallback(async () => {
@@ -75,7 +74,7 @@ export default function Search() {
       if (debouncedSearchTerm) {
         fetchQuotes(debouncedSearchTerm);
       }
-    }, [debouncedSearchTerm]
+    }, [fetchQuotes, debouncedSearchTerm]
   );
 
   const iconSearch = useMemo(() =>
