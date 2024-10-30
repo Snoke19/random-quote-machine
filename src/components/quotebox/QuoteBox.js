@@ -92,7 +92,7 @@ export default function QuoteBox() {
 
   return (
     <div className="quote-box">
-      <QuoteAndAuthor quote={quote} styleTheme={styleTheme}/>
+      <QuoteAndAuthor quote={quote} theme={styleTheme}/>
       <Categories
         categoryList={categories}
         theme={styleTheme}
