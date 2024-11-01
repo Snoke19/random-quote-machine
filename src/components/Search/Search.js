@@ -28,14 +28,15 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [inputSearch, setInputSearch] = useState('');
   const [filteredQuotes, setFilteredQuotes] = useState([]);
+  const [offset, setOffset] = useState(0);
 
   const debouncedSearchTerm = useDebounce(inputSearch, 500);
 
-  const fetchQuotes = useCallback(async (searchValue) => {
+  const fetchQuotes = useCallback(async (searchValue, offset = 0) => {
     setLoading(true);
     try {
-      const quotes = await fetchQuotesByTextQuote(searchValue);
-      setFilteredQuotes(quotes);
+      const quotes = await fetchQuotesByTextQuote(searchValue, offset);
+      setFilteredQuotes((prev) => [...prev, ...quotes]);
     } catch (error) {
       displayNotification('Failed to fetch quotes');
     } finally {
@@ -48,6 +49,8 @@ export default function Search() {
       const {value} = e.target;
       if (value.length >= 0) {
         setInputSearch(value);
+        setOffset(0);
+        setFilteredQuotes([]);
       }
     }, []
   );
@@ -70,11 +73,18 @@ export default function Search() {
     }
   };
 
+  const handleScroll = useCallback((e) => {
+    const bottomReached = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottomReached && !loading) {
+      setOffset((prev) => prev + 10);
+    }
+  }, [loading])
+
   useEffect(() => {
       if (debouncedSearchTerm) {
-        fetchQuotes(debouncedSearchTerm);
+        fetchQuotes(debouncedSearchTerm, offset).catch(() => console.log('Failed to fetch quotes'));
       }
-    }, [fetchQuotes, debouncedSearchTerm]
+    }, [fetchQuotes, debouncedSearchTerm, offset]
   );
 
   const iconSearch = useMemo(() =>
@@ -101,7 +111,7 @@ export default function Search() {
           {iconSearch}
         </button>
         {filteredQuotes.length > 0 && (
-          <ul className={`dropdown ${filteredQuotes.length > 0 ? 'show' : ''}`}>
+          <ul className={`dropdown ${filteredQuotes.length > 0 ? 'show' : ''}`} onScroll={handleScroll}>
             {filteredQuotes.map((quote) => (
               <QuoteItem
                 key={`${quoteId}-${quote.id}`}

@@ -14,10 +14,10 @@ export async function fetchRandomQuoteByCategories(categories) {
   }
 }
 
-export async function fetchQuotesByTextQuote(textQuote) {
+export async function fetchQuotesByTextQuote(textQuote, offset) {
   try {
     const response = await AxiosInstance.get(`/quotes`,
-      {params: {text: textQuote}}
+      {params: {text: textQuote, offset: offset}}
     );
     return response.data;
   } catch (error) {
