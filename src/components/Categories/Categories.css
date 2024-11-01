@@ -1,63 +1,32 @@
-/* Categories Input Styles */
 .categories-input-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin: 35px 0 35px 0;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 35px 0 35px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Category Styles */
-.categories-input-container .category {
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 14px;
-  color: white;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.categories-input-container .category span {
-  margin-right: 5px;
-  font-family: "Lora", serif;
-}
-
-/* Category Hover Effects */
-.categories-input-container .category:hover {
-  box-shadow: rgba(0, 0, 0, 0.2) 0 8px 15px;
-}
-
-/* Input Field Styles */
 .categories-input-container .categories-input {
-  border: none;
-  outline: none;
-  padding: 5px 10px;
-  font-size: 14px;
-  flex-grow: 1;
-  background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    flex-grow: 1;
+    background-color: transparent;
 }
 
-/* Remove Category Button */
-.categories-input-container .remove-category {
-  background: none;
-  font-family: "Lora", serif;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+.combo-box-categories {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
 }
 
-.categories-input-container .remove-category:hover {
-  background-color: rgb(255, 255, 255);
-  color: black;
+.combo-box-categories-input {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    outline: none;
 }
