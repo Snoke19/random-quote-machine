@@ -8,25 +8,9 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.categories-input-container .categories-input {
-    border: none;
-    outline: none;
-    padding: 5px 10px;
-    font-size: 14px;
-    flex-grow: 1;
-    background-color: transparent;
-}
-
 .combo-box-categories {
     position: relative;
     display: flex;
     flex-direction: column;
     max-width: 400px;
-}
-
-.combo-box-categories-input {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: none;
-    outline: none;
 }

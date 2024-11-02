@@ -1,6 +1,8 @@
 import React, {memo, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 
+import "./SuggestedCategoriesInput.css";
+
 const SuggestedCategoriesInput = memo(
   function SuggestedCategoriesInput({inputValue, onChange, onKeyDown}) {
     const inputRef = useRef(null);
