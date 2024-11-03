@@ -10,6 +10,7 @@ import {useNotificationContext} from "../Context/NotificationContext";
 import useDebounce from "../Hooks/useDebounce";
 import removeSlashes from "../../utils/strValidation";
 import fetchCategoriesByName from "../../services/CategoryService";
+import useClickAway from "../Hooks/useClickAway";
 
 const ENTER_KEY = "Enter";
 const BACKSPACE_KEY = "Backspace";
@@ -21,7 +22,9 @@ const Categories = memo(
     const {displayNotification} = useNotificationContext();
     const [categoryInput, setCategoryInput] = useState("");
     const [suggestedCategories, setSuggestedCategories] = useState([]);
+
     const debouncedInput = useDebounce(categoryInput, 500);
+    const clickAway = useClickAway(() => setSuggestedCategories([]));
 
     const handleCategoryInputChange = useCallback((e) => {
       const inputValue = e.target.value;
@@ -40,20 +43,6 @@ const Categories = memo(
       }
     }, [categoryInput, onAddCategory, onRemoveCategory]);
 
-    const fetchSuggestedCategories = useCallback(
-      async () => {
-        if (debouncedInput.trim()) {
-          try {
-            const sanitizedInput = removeSlashes(categoryInput);
-            const categorySuggestions = await fetchCategoriesByName(sanitizedInput, offset);
-            setSuggestedCategories((prevState) => [...prevState, ...categorySuggestions]);
-          } catch (error) {
-            displayNotification(error.message);
-          }
-        }
-      }, [setSuggestedCategories, debouncedInput, categoryInput, displayNotification, offset]
-    );
-
     const handleScrollEnd = useCallback((e) => {
       const bottomReached = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
       if (bottomReached) {
@@ -61,15 +50,27 @@ const Categories = memo(
       }
     }, []);
 
-    useEffect(() => {
+    const fetchSuggestions = useCallback(async () => {
       if (debouncedInput) {
-        if (categoryInput.trim()) {
-          fetchSuggestedCategories();
-        } else {
-          setSuggestedCategories([])
+        try {
+          const sanitizedInput = removeSlashes(debouncedInput);
+          const categorySuggestions = await fetchCategoriesByName(sanitizedInput, offset);
+          setSuggestedCategories((prevState) => [...prevState, ...categorySuggestions]);
+        } catch (error) {
+          displayNotification(error.message);
         }
+      } else {
+        setSuggestedCategories([]);
       }
-    }, [categoryInput, debouncedInput, fetchSuggestedCategories]);
+    }, [debouncedInput, displayNotification, offset]);
+
+    const handleSearchInputFocus = useCallback(async () => {
+      if (categoryInput.length > 0 && suggestedCategories.length === 0) await fetchSuggestions();
+    }, [categoryInput.length, suggestedCategories.length, fetchSuggestions]);
+
+    useEffect(() => {
+      fetchSuggestions();
+    }, [fetchSuggestions]);
 
     const handleOnAddCategory = (category) => {
       onAddCategory(category);
@@ -78,10 +79,11 @@ const Categories = memo(
     }
 
     return (
-      <div className="categories-input-container">
+      <div className="categories-input-container" ref={clickAway}>
         <CategoryList categories={categoryList} onRemove={onRemoveCategory} theme={theme}/>
         <div className="combo-box-categories">
           <SuggestedCategoriesInput
+            onFocus={handleSearchInputFocus}
             inputValue={categoryInput}
             onChange={handleCategoryInputChange}
             onKeyDown={handleInputKeyDown}/>

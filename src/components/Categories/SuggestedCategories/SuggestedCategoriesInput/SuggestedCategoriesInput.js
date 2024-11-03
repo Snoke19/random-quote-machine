@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "./SuggestedCategoriesInput.css";
 
 const SuggestedCategoriesInput = memo(
-  function SuggestedCategoriesInput({inputValue, onChange, onKeyDown}) {
+  function SuggestedCategoriesInput({onFocus, inputValue, onChange, onKeyDown}) {
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -13,6 +13,7 @@ const SuggestedCategoriesInput = memo(
 
     return (
       <input
+        onFocus={onFocus}
         id="combobox-input"
         type="text"
         ref={inputRef}
