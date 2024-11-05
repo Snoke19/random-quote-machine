@@ -1,10 +1,8 @@
-import React, {memo, useCallback, useEffect, useState} from "react";
+import React, {memo, useCallback, useEffect, useId, useState} from "react";
 import PropTypes from "prop-types";
 
 import "./Categories.css";
 
-import SuggestedCategoriesMenu from "./SuggestedCategories/SuggestedCategoriesMenu/SuggestedCategoriesMenu";
-import SuggestedCategoriesInput from "./SuggestedCategories/SuggestedCategoriesInput/SuggestedCategoriesInput";
 import CategoryList from "./CategoryList/CategoryList";
 import {useNotificationContext} from "../Context/NotificationContext";
 import useDebounce from "../Hooks/useDebounce";
@@ -18,13 +16,17 @@ const BACKSPACE_KEY = "Backspace";
 const Categories = memo(
   function Categories({categoryList, theme, onRemoveCategory, onAddCategory}) {
 
-    const [offset, setOffset] = useState(0);
+    const suggestionKeyId = useId();
+
     const {displayNotification} = useNotificationContext();
+    const clickAway = useClickAway(() => setSuggestedCategories([]));
+
+    const [offset, setOffset] = useState(0);
     const [categoryInput, setCategoryInput] = useState("");
+    const [highlightedSuggestion, setHighlightedSuggestion] = useState(null);
     const [suggestedCategories, setSuggestedCategories] = useState([]);
 
     const debouncedInput = useDebounce(categoryInput, 500);
-    const clickAway = useClickAway(() => setSuggestedCategories([]));
 
     const handleCategoryInputChange = useCallback((e) => {
       const inputValue = e.target.value;
@@ -72,26 +74,56 @@ const Categories = memo(
       fetchSuggestions();
     }, [fetchSuggestions]);
 
-    const handleOnAddCategory = (category) => {
+    const handleOnAddCategory = useCallback((category) => {
       onAddCategory(category);
       setCategoryInput("");
       setSuggestedCategories([]);
-    }
+    }, [onAddCategory, setSuggestedCategories]);
 
     return (
       <div className="categories-input-container" ref={clickAway}>
         <CategoryList categories={categoryList} onRemove={onRemoveCategory} theme={theme}/>
         <div className="combo-box-categories">
-          <SuggestedCategoriesInput
+          <input
+            autoFocus
             onFocus={handleSearchInputFocus}
-            inputValue={categoryInput}
+            id="combobox-input"
+            type="text"
+            className="combo-box-categories-input"
+            value={categoryInput}
             onChange={handleCategoryInputChange}
-            onKeyDown={handleInputKeyDown}/>
-          <SuggestedCategoriesMenu
-            suggestedCategories={suggestedCategories}
-            theme={theme}
-            onAddCategory={handleOnAddCategory}
-            handleScrollEnd={handleScrollEnd}/>
+            onKeyDown={handleInputKeyDown}
+            role="combobox"
+            aria-controls="combo-box-options"
+            aria-activedescendant=""
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            placeholder="Enter category"
+            autoComplete="off"
+          />
+          {
+            suggestedCategories.length > 0 && (
+              <div onScroll={handleScrollEnd} className="combo-box-suggested-categories-menu" role="listbox"
+                   id="combo-box-options">
+                {suggestedCategories.map((suggestion, index) =>
+                  <div role="option"
+                       tabIndex={0}
+                       className="combo-box-category-item"
+                       key={`${suggestion.name}-${index}-${suggestionKeyId}`}
+                       aria-selected={suggestion === highlightedSuggestion}
+                       style={{
+                         backgroundColor: suggestion === highlightedSuggestion ? theme.color : "transparent",
+                         color: suggestion === highlightedSuggestion ? "white" : "black",
+                       }}
+                       onMouseEnter={() => setHighlightedSuggestion(suggestion)}
+                       onClick={() => handleOnAddCategory(suggestion.name)}>
+                    {suggestion.name}
+                  </div>
+                )}
+              </div>
+            )
+          }
         </div>
       </div>
     );
