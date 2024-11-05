@@ -157,6 +157,6 @@ const QuoteItem = memo(
 QuoteItem.propTypes = {
   categoryId: PropTypes.string.isRequired,
   quote: PropTypes.object.isRequired,
-  styleTheme: PropTypes.object.isRequired,
+  styleTheme: PropTypes.string.isRequired,
   onQuoteSelect: PropTypes.func.isRequired,
 };
