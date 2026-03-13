@@ -1,16 +1,16 @@
-import React, {memo, useCallback, useEffect, useId, useMemo, useState} from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import PropTypes from "prop-types";
 
 import './Search.css';
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {fetchQuotesByTextQuote} from "../../services/QuoteService";
-import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
-import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
-import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
-import {useStyleThemeContext} from "../Context/StyleThemeContext";
-import {useNotificationContext} from "../Context/NotificationContext";
-import {useSearchContext} from "../Context/SearchContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { fetchQuotesByTextQuote } from "../../services/QuoteService";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
+import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons/faSpinner";
+import { useStyleThemeContext } from "../Context/StyleThemeContext";
+import { useNotificationContext } from "../Context/NotificationContext";
+import { useSearchContext } from "../Context/SearchContext";
 import useClickAway from "../Hooks/useClickAway";
 import useDebounce from "../Hooks/useDebounce";
 
@@ -19,11 +19,20 @@ export default function Search() {
   const quoteId = useId();
   const categoryId = useId();
 
-  const ref = useClickAway(() => setFilteredQuotes([]));
+  const ref = useClickAway(useCallback(() => {
+    setFilteredQuotes((prev) => {
+      // If it's already empty, return the 'prev' reference.
+      // React sees the reference hasn't changed and stops the re-render.
+      if (prev.length === 0) return prev;
 
-  const {styleTheme} = useStyleThemeContext();
-  const {setSearchQuote} = useSearchContext();
-  const {displayNotification} = useNotificationContext();
+      // If it's NOT empty, return a new empty array to clear the UI.
+      return [];
+    });
+  }, []));
+
+  const { styleTheme } = useStyleThemeContext();
+  const { setSearchQuote } = useSearchContext();
+  const { displayNotification } = useNotificationContext();
 
   const [loading, setLoading] = useState(false);
   const [inputSearch, setInputSearch] = useState('');
@@ -45,14 +54,14 @@ export default function Search() {
   }, [displayNotification]);
 
   const handleSearchInputChange = useCallback((e) => {
-      e.preventDefault();
-      const {value} = e.target;
-      if (value.length >= 0) {
-        setInputSearch(value);
-        setOffset(0);
-        setFilteredQuotes([]);
-      }
-    }, []
+    e.preventDefault();
+    const { value } = e.target;
+    if (value.length >= 0) {
+      setInputSearch(value);
+      setOffset(0);
+      setFilteredQuotes([]);
+    }
+  }, []
   );
 
   const handleSearchInputFocus = useCallback(async () => {
@@ -81,18 +90,18 @@ export default function Search() {
   }, [loading])
 
   useEffect(() => {
-      if (debouncedSearchTerm) {
-        fetchQuotes(debouncedSearchTerm, offset).catch(() => console.log('Failed to fetch quotes'));
-      }
-    }, [fetchQuotes, debouncedSearchTerm, offset]
+    if (debouncedSearchTerm) {
+      fetchQuotes(debouncedSearchTerm, offset).catch(() => console.log('Failed to fetch quotes'));
+    }
+  }, [fetchQuotes, debouncedSearchTerm, offset]
   );
 
   const iconSearch = useMemo(() =>
-      loading ? (
-        <FontAwesomeIcon icon={faSpinner} spin/>
-      ) : (
-        <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass}/>
-      ),
+    loading ? (
+      <FontAwesomeIcon icon={faSpinner} spin />
+    ) : (
+      <FontAwesomeIcon icon={filteredQuotes.length > 0 ? faXmark : faMagnifyingGlass} />
+    ),
     [loading, filteredQuotes.length]
   );
 
@@ -129,8 +138,8 @@ export default function Search() {
 }
 
 const QuoteItem = memo(
-  function QuoteItem({categoryId, quote, styleTheme, onQuoteSelect}) {
-    const {quoteText, author: {name: authorName}, categories} = quote;
+  function QuoteItem({ categoryId, quote, styleTheme, onQuoteSelect }) {
+    const { quoteText, author: { name: authorName }, categories } = quote;
     return (
       <li className="dropdown-item">
         <button className="button-quote-block" onClick={() => onQuoteSelect(quote)}>
@@ -140,9 +149,9 @@ const QuoteItem = memo(
               <span className="search-author-text"> — {authorName}</span>
             </div>
             <div className="search-categories">
-              {categories.map(({id, name}) => (
+              {categories.map(({ id, name }) => (
                 <span className="search-category-label" key={`${categoryId}-${id}`}
-                      style={{backgroundColor: styleTheme}}>
+                  style={{ backgroundColor: styleTheme }}>
                   {name}
                 </span>
               ))}

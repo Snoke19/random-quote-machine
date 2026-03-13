@@ -1,10 +1,10 @@
-import React, {memo, useCallback, useEffect, useId, useState} from "react";
+import React, { memo, useCallback, useEffect, useId, useState } from "react";
 import PropTypes from "prop-types";
 
 import "./Categories.css";
 
 import CategoryList from "./CategoryList/CategoryList";
-import {useNotificationContext} from "../Context/NotificationContext";
+import { useNotificationContext } from "../Context/NotificationContext";
 import useDebounce from "../Hooks/useDebounce";
 import removeSlashes from "../../utils/strValidation";
 import fetchCategoriesByName from "../../services/CategoryService";
@@ -14,12 +14,19 @@ const ENTER_KEY = "Enter";
 const BACKSPACE_KEY = "Backspace";
 
 const Categories = memo(
-  function Categories({categoryList, theme, onRemoveCategory, onAddCategory}) {
+  function Categories({ categoryList, theme, onRemoveCategory, onAddCategory }) {
 
     const suggestionKeyId = useId();
 
-    const {displayNotification} = useNotificationContext();
-    const clickAway = useClickAway(() => setSuggestedCategories([]));
+    const { displayNotification } = useNotificationContext();
+    
+    const clickAway = useClickAway(useCallback(() => {
+      setSuggestedCategories((prev) => {
+        if (prev.length === 0) return prev;
+        return [];
+      });
+
+    }, []));
 
     const [offset, setOffset] = useState(0);
     const [categoryInput, setCategoryInput] = useState("");
@@ -82,7 +89,7 @@ const Categories = memo(
 
     return (
       <div className="categories-input-container" ref={clickAway}>
-        <CategoryList categories={categoryList} onRemove={onRemoveCategory} theme={theme}/>
+        <CategoryList categories={categoryList} onRemove={onRemoveCategory} theme={theme} />
         <div className="combo-box-categories">
           <input
             autoFocus
@@ -105,19 +112,19 @@ const Categories = memo(
           {
             suggestedCategories.length > 0 && (
               <div onScroll={handleScrollEnd} className="combo-box-suggested-categories-menu" role="listbox"
-                   id="combo-box-options">
+                id="combo-box-options">
                 {suggestedCategories.map((suggestion, index) =>
                   <div role="option"
-                       tabIndex={0}
-                       className="combo-box-category-item"
-                       key={`${suggestion.name}-${index}-${suggestionKeyId}`}
-                       aria-selected={suggestion === highlightedSuggestion}
-                       style={{
-                         backgroundColor: suggestion === highlightedSuggestion ? theme.color : "transparent",
-                         color: suggestion === highlightedSuggestion ? "white" : "black",
-                       }}
-                       onMouseEnter={() => setHighlightedSuggestion(suggestion)}
-                       onClick={() => handleOnAddCategory(suggestion.name)}>
+                    tabIndex={0}
+                    className="combo-box-category-item"
+                    key={`${suggestion.name}-${index}-${suggestionKeyId}`}
+                    aria-selected={suggestion === highlightedSuggestion}
+                    style={{
+                      backgroundColor: suggestion === highlightedSuggestion ? theme.color : "transparent",
+                      color: suggestion === highlightedSuggestion ? "white" : "black",
+                    }}
+                    onMouseEnter={() => setHighlightedSuggestion(suggestion)}
+                    onClick={() => handleOnAddCategory(suggestion.name)}>
                     {suggestion.name}
                   </div>
                 )}
@@ -132,7 +139,7 @@ const Categories = memo(
 
 Categories.propTypes = {
   categoryList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  theme: PropTypes.shape({color: PropTypes.string}).isRequired,
+  theme: PropTypes.shape({ color: PropTypes.string }).isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
   onAddCategory: PropTypes.func.isRequired,
 };

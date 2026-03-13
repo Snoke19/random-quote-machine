@@ -1,13 +1,13 @@
-import React, {useCallback, useEffect, useId, useMemo} from "react";
+import React, { useCallback, useEffect, useId, useMemo } from "react";
 
 import "./QuoteBox.css";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
-import {faLinkedin} from "@fortawesome/free-brands-svg-icons/faLinkedin";
-import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
-import {faWandMagicSparkles} from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
-import {faCopy} from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons/faTwitter";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons/faLinkedin";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons/faFacebook";
+import { faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons/faWandMagicSparkles";
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import Categories from "../Categories/Categories";
 import QuoteAndAuthor from "./QuoteAndAuthor/QuoteAndAuthor";
 import SocialButton from "../Buttons/SocialButton";
@@ -16,18 +16,18 @@ import useCategory from "../Hooks/useCategory";
 import getRandomColor from "../../utils/randomColor";
 import useStyleTheme from "../Hooks/useStyleTheme";
 import useQuote from "../Hooks/useQuote";
-import {useStyleThemeContext} from "../Context/StyleThemeContext";
-import {useNotificationContext} from "../Context/NotificationContext";
-import {useSearchContext} from "../Context/SearchContext";
+import { useStyleThemeContext } from "../Context/StyleThemeContext";
+import { useNotificationContext } from "../Context/NotificationContext";
+import { useSearchContext } from "../Context/SearchContext";
 
 export default function QuoteBox() {
   const idSocialButton = useId();
 
   const [categories, removeLastCategoryOrByIndex, addCategory] = useCategory();
 
-  const {searchQuote} = useSearchContext();
-  const {updateStyleThemeContext} = useStyleThemeContext();
-  const {displayNotification} = useNotificationContext();
+  const { searchQuote } = useSearchContext();
+  const { updateStyleThemeContext } = useStyleThemeContext();
+  const { displayNotification } = useNotificationContext();
   const [styleTheme, updateStyleTheme] = useStyleTheme();
 
   const [error, quote, loadQuote, setQuote] = useQuote(categories);
@@ -42,20 +42,24 @@ export default function QuoteBox() {
     }
   }, [error, displayNotification, categories, loadQuote, updateStyleTheme]);
 
-  const handleCopyToClipboard = () => {
-    const copiedQuote = `${quote.quote} - ${quote.author}`;
-    copyToClipboard(copiedQuote).then(() => {
-      displayNotification(`The quote "${copiedQuote.substring(0, 20)}..." has been copied!`);
-    }).catch((e) => {
-      displayNotification('Cannot copy the quote!');
-      console.error(e);
-    })
-  }
+  const handleCopyToClipboard = useCallback(() => {
+    const { quote: text, author } = quote;
+    const copiedQuote = `${text} - ${author}`;
+
+    copyToClipboard(copiedQuote)
+      .then(() => {
+        const preview = copiedQuote.substring(0, 20);
+        displayNotification(`The quote "${preview}..." has been copied!`);
+      }).catch((e) => {
+        displayNotification('Cannot copy the quote!');
+        console.error(e);
+      })
+  }, [quote, copyToClipboard, displayNotification]);
 
   useEffect(() => {
     if (searchQuote) {
-      const {quoteText, author: {name: authorName} = {}} = searchQuote || {};
-      const result = {quote: quoteText, author: authorName};
+      const { quoteText, author: { name: authorName } = {} } = searchQuote || {};
+      const result = { quote: quoteText, author: authorName };
       setQuote(result);
     }
   }, [searchQuote, setQuote]);
@@ -85,14 +89,14 @@ export default function QuoteBox() {
     [quote]
   );
 
-  const iconCopyClipboard = useMemo(() => <FontAwesomeIcon icon={faCopy} size="xl"/>, []);
+  const iconCopyClipboard = useMemo(() => <FontAwesomeIcon icon={faCopy} size="xl" />, []);
   const iconMagicRandomQuote = useMemo(() => {
-    return <><FontAwesomeIcon icon={faWandMagicSparkles} style={{paddingRight: '5px'}}/> New quote</>
+    return <><FontAwesomeIcon icon={faWandMagicSparkles} style={{ paddingRight: '5px' }} /> New quote</>
   }, []);
 
   return (
     <div className="quote-box">
-      <QuoteAndAuthor quote={quote} theme={styleTheme}/>
+      <QuoteAndAuthor quote={quote} theme={styleTheme} />
       <Categories
         categoryList={categories}
         theme={styleTheme}
@@ -114,7 +118,7 @@ export default function QuoteBox() {
         <div className="group-buttons">
           <button
             className="button clipboard-button"
-            style={{backgroundColor: styleTheme.color}}
+            style={{ backgroundColor: styleTheme.color }}
             onClick={handleCopyToClipboard}
             aria-label="Copy quote to clipboard"
           >
@@ -122,7 +126,7 @@ export default function QuoteBox() {
           </button>
           <button
             className="button quote-button"
-            style={{backgroundColor: styleTheme.color}}
+            style={{ backgroundColor: styleTheme.color }}
             onClick={loadQuoteWithStyle}
             aria-label="Load new quote"
           >
