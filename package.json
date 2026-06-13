@@ -8,7 +8,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@uidotdev/usehooks": "^2.4.1",
@@ -24,8 +23,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:scan": "set REACT_APP_SCAN_ENABLED=true && react-scripts start",
-    "start:no-scan": "set REACT_APP_SCAN_ENABLED=false && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -47,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/jest": "^30.0.0"
   }
 }
