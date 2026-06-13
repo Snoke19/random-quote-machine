@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useMemo} from 'react';
 import useNotification from "../Hooks/useNotification";
-import Notification from "../Notification/Notification";
+import Notification from "../notification/Notification";
 import PropTypes from "prop-types";
 
 const NotificationContext = createContext(null);

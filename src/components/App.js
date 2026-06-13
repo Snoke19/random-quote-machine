@@ -3,8 +3,8 @@ import React from "react";
 import './App.css';
 
 import Search from "./Search/Search";
-import QuoteBox from "./QuoteBox/QuoteBox";
-import Footer from "./Footer/Footer";
+import QuoteBox from "./quotebox/QuoteBox";
+import Footer from "./footer/Footer";
 import {StyleThemeProvider} from "./Context/StyleThemeContext";
 import {NotificationProvider} from "./Context/NotificationContext";
 import {SearchProvider} from "./Context/SearchContext";
