@@ -1,7 +1,7 @@
 import AxiosInstance from "../utils/AxiosClient";
 import {handleError} from "../utils/errors/handleError";
 
-export default async function fetchCategoriesByName(category, offset) {
+export default async function fetchCategoriesByName(category, offset, signal) {
     const categoryValidation = isCategoryName(category);
     const offsetValidation = isValidOffset(offset);
 
@@ -16,7 +16,8 @@ export default async function fetchCategoriesByName(category, offset) {
 
     try {
         const response = await AxiosInstance.get(`/categories/${category}`, {
-            params: {offset}
+            params: {offset},
+            signal
         });
         return response.data;
     } catch (error) {

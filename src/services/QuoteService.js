@@ -1,15 +1,17 @@
 import AxiosInstance from "../utils/AxiosClient";
 import {handleError} from "../utils/errors/handleError";
 
-export async function fetchRandomQuoteByCategories(categories) {
+export async function fetchRandomQuoteByCategories(categories, signal) {
     try {
         const categoriesArray = Array.isArray(categories) ?
             categories : (categories ? [categories] : []);
 
         const categoriesStr = categoriesArray.join(",");
 
-        const response = await AxiosInstance.get(`/random/quote`,
-            {params: {categories: categoriesStr}}
+        const response = await AxiosInstance.get(`/random/quote`, {
+                params: {categories: categoriesStr},
+                signal,
+            }
         );
 
         return response.data;
@@ -20,9 +22,10 @@ export async function fetchRandomQuoteByCategories(categories) {
 
 export async function fetchQuotesByTextQuote(textQuote, offset) {
     try {
-        const response = await AxiosInstance.get(`/quotes`,
-            {params: {text: textQuote, offset}}
-        );
+        const response = await AxiosInstance.get(`/quotes`, {
+            params: {text: textQuote, offset},
+            signal
+        });
         return response.data;
     } catch (error) {
         handleError(error, {
